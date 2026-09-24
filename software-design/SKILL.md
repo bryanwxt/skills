@@ -1,6 +1,6 @@
 ---
 name: software-design
-description: Design-quality lens for superpowers workflows, based on John Ousterhout's "A Philosophy of Software Design": deep modules, information hiding, pulling complexity down, defining errors out of existence, design it twice, and red-flag review. Use it inside superpowers:brainstorming (approaches, component design, spec self-review), superpowers:writing-plans (ordering tasks around interfaces), and superpowers:requesting-code-review / receiving-code-review (module and interface structure). Also use it when asked to audit an existing app's architecture, reduce complexity, or judge whether code is well designed. It reviews design only and never writes production code.
+description: 'Design-quality lens for superpowers workflows, based on John Ousterhout''s "A Philosophy of Software Design": deep modules, information hiding, pulling complexity down, defining errors out of existence, design it twice, and red-flag review. Use it inside superpowers:brainstorming (approaches, component design, spec self-review), superpowers:writing-plans (ordering tasks around interfaces), and superpowers:requesting-code-review / receiving-code-review (module and interface structure). Also use it when asked to audit an existing app''s architecture, reduce complexity, or judge whether code is well designed. It reviews design only and never writes production code.'
 ---
 
 # Software Design (superpowers lens)
