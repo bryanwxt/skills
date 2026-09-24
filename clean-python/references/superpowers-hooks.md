@@ -126,7 +126,7 @@ Don't claim "tests pass" or "type-clean" without the output. If a tool isn't con
 
 ## 7. requesting-code-review / receiving-code-review
 
-**Requesting.** When filling the reviewer template, append `references/review-lens.md` to the `PLAN_OR_REQUIREMENTS` text, together with the spec's Python implementation notes. The reviewer runs in a separate agent and won't otherwise know the lens. Map severities:
+**Requesting.** Only when the diff touches Python files: when filling the reviewer template, append `references/review-lens.md` to the `PLAN_OR_REQUIREMENTS` text, together with the spec's Python implementation notes. The reviewer runs in a separate agent and won't otherwise know the lens. Map severities:
 - **Critical:** correctness hazards (mutable defaults causing shared state, swallowed exceptions, resource leaks, blocking the event loop).
 - **Important:** design and idiom problems in shared code.
 - **Minor:** local idioms and naming.

@@ -76,7 +76,7 @@ If yes, mention it in one line of the in-chat design with the simpler alternativ
 
 ## 6. requesting-code-review / receiving-code-review
 
-**Requesting.** When filling the reviewer template, append `references/review-lens.md` to the `PLAN_OR_REQUIREMENTS` text, along with the spec's module cards for the modules touched. The reviewer runs in a separate agent and won't otherwise know the lens. Map severities: data loss, security, or broken invariants are Critical; design red flags that will cause change amplification in modules others depend on are Important; local naming, comments, and minor shallowness are Minor.
+**Requesting.** Only when the diff changes module boundaries or interfaces: when filling the reviewer template, append `references/review-lens.md` to the `PLAN_OR_REQUIREMENTS` text, along with the spec's module cards for the modules touched. The reviewer runs in a separate agent and won't otherwise know the lens. Map severities: data loss, security, or broken invariants are Critical; design red flags that will cause change amplification in modules others depend on are Important; local naming, comments, and minor shallowness are Minor.
 
 **Receiving.** receiving-code-review requires checking feedback before acting. For design feedback:
 - Check it against the principles. "Split this class up" or "extract smaller functions" is only right if it produces cleaner abstractions — splitting that creates shallow modules, pass-throughs, or conjoined pieces makes things worse. Push back with the reason.

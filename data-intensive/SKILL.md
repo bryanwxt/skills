@@ -1,148 +1,171 @@
 ---
 name: data-intensive
-description: Designs, reviews, and debugs data-intensive systems using the principles of Martin Kleppmann's "Designing Data-Intensive Applications" — data models and databases, storage engines, OLTP vs analytics, encoding and schema evolution, replication, partitioning/sharding, transactions and isolation levels, distributed-system faults, clocks, consensus, batch and stream processing, CDC, event sourcing, and end-to-end correctness. Use whenever the user is choosing a database, queue, or data format; designing or reviewing a backend, data platform, or pipeline architecture; scaling a system; hunting race conditions, lost updates, or consistency bugs; diagnosing replication lag, hot shards, or distributed incidents; planning schema migrations; preparing for a system design interview; or asking how some data system works under the hood.
+description: Data-systems lens for superpowers workflows, based on Martin Kleppmann's "Designing Data-Intensive Applications" — data models and stores, storage engines, encoding and schema evolution, replication, partitioning, transactions and isolation, distributed failures, clocks, consensus, batch/stream pipelines, CDC, and end-to-end correctness. Use when work involves data guarantees, scale, or concurrency. That covers: designing a data architecture from scratch (through superpowers:brainstorming), choosing a database, queue, or data format, reviewing a data architecture or incident, and supplying data concerns inside superpowers' planning, TDD, debugging, and code-review steps. Don't use for ordinary CRUD with no scale, concurrency, or consistency concern.
 ---
 
-# Data-Intensive Systems
+# Data-Intensive (superpowers lens)
 
-A data-intensive application is one where the hard problems are the amount, complexity, and rate of change of data, rather than raw CPU. This skill helps reason about such systems from first principles: what guarantees each component gives, what it costs, and what happens when things fail.
+This skill adds a data-systems lens to superpowers: what guarantees each component gives, what they cost, and what happens when things fail. Superpowers owns the process for building software. This skill owns the judgment about data, and runs two flows of its own, choosing technology and reviewing data architecture, using the same discipline as brainstorming.
 
-The three goals behind every recommendation:
+## What it handles
 
-- **Reliability** — the system keeps working correctly when hardware, software, or people fail.
-- **Scalability** — there are reasonable ways to cope as load grows.
-- **Maintainability** — people can operate, understand, and evolve it.
-
-Always frame trade-offs in these terms, with concrete load numbers where possible.
-
-## Identify the use case
-
-Pick the use case(s) from the request, then follow that section. Many requests combine several (e.g. a design review usually touches C, E, and F).
-
-| # | Use case | Typical request |
+| Flow | How it runs | Details |
 |---|---|---|
-| A | Design a new data system | "Design the backend for…", "how should we architect…" |
-| B | Review an existing architecture or design doc | "Review this design", "what could go wrong with…" |
-| C | Choose a technology | "Postgres or Mongo?", "Kafka or RabbitMQ?", "which storage format?" |
-| D | Schema, encoding, and API evolution | "How do we migrate this schema?", "Avro vs Protobuf vs JSON", rolling deploys |
-| E | Scale it: replication, partitioning, capacity | "We're outgrowing one DB", "how do we shard?", "read replicas?" |
-| F | Concurrency and transaction correctness | "Is this code race-free?", double bookings, lost updates, "which isolation level?" |
-| G | Distributed coordination and failure | locks/leases, leader election, timeouts, clocks, idempotency, exactly-once |
-| H | Data pipelines and derived data | ETL, batch jobs, stream processing, CDC, event sourcing, caches, search indexes |
-| I | Diagnose an incident or weird behaviour | stale reads, lost writes, split brain, hot shard, replication lag |
-| J | Learn, explain, or interview prep | "Explain LSM-trees", "quiz me on consistency", system design practice |
+| **1. Design a data architecture from scratch** | Through `superpowers:brainstorming`'s architectural path, with this skill's **data track** layered in: extra questions, approach comparison, spec sections, failure analysis, self-review | §1, hooks §1 |
+| **2. Choose a technology** (database, queue, format, engine) | This skill runs it, **brainstorming-style**: classify, discover intent, write back, compare options, present, decision record, self-review, user review gate, hand-off | §2 |
+| **3. Review a data architecture or an incident** | This skill runs it, **brainstorming-style**, ending with fixes handed to brainstorming | §3 |
+| **4. Data concerns inside other superpowers steps** | Hooks into bounded brainstorming, writing-plans, TDD, execution, verification, code review, systematic-debugging | `references/superpowers-hooks.md` |
 
-Reference files, by topic — read the ones the use case needs:
+**Lanes with other skills:**
+- **`data-intensive`** decides which store owns each piece of data, which guarantee each operation needs, how data flows between stores, how it's replicated, partitioned, and evolved, and what happens on failure.
+- **`software-design`** decides how code is split into modules and what each one hides. For example, the repository module hides which store and isolation level are used.
+- **`clean-python`** decides how it's written in Python, for example the transaction retry loop, session handling, or an idempotency-key check.
+- For a data-heavy Python feature, use all three. Each adds its own sections to one brainstorming spec, never separate documents.
 
-- `references/foundations.md` — reliability/scalability/maintainability, describing load and latency percentiles, data models, query languages, storage engines, OLTP vs OLAP, column stores.
-- `references/encoding-evolution.md` — encoding formats, schema evolution, compatibility, and dataflow through databases, services, and messages.
-- `references/replication.md` — single-leader, multi-leader, leaderless; replication lag anomalies; conflict resolution; quorums.
-- `references/partitioning.md` — key-range vs hash, hot spots, secondary indexes, rebalancing, routing.
-- `references/transactions.md` — ACID, isolation levels, the anomaly catalogue, and how to prevent each one in application code.
-- `references/distributed.md` — partial failure, networks, timeouts, clocks, process pauses, fencing, linearizability, ordering, 2PC, consensus, coordination services.
-- `references/derived-data.md` — batch processing, stream processing, messaging, CDC, event sourcing, stream joins, fault tolerance, unbundled databases, end-to-end correctness, ethics.
-- `references/decision-guides.md` — side-by-side trade-off tables for the common choices.
-- `references/review-checklist.md` — the question list for design reviews and incident diagnosis.
-- `assets/design-doc-template.md`, `assets/decision-record-template.md` — output formats.
+## Ground rules (every flow)
 
-**Currency note:** the book was published in 2017. The principles are durable, but specific product capabilities (which databases support what isolation, which systems offer what guarantees) change. When a recommendation depends on what a specific product does today, check its current documentation (web search if available) and say so, rather than relying on the book's snapshot.
+1. **Start from the workload.** Get or estimate the load parameters that matter:
+   - reads and writes per second, and the read/write ratio;
+   - data size and growth;
+   - fan-out and hot keys;
+   - latency targets at p50, p99, and p999;
+   - how bad each kind of failure would be.
 
-## Ground rules for every use case
+   No numbers, no scaling advice. If the user can't give numbers, state assumptions.
+2. **Name the guarantee.** Never say "consistent" or "safe" loosely. Say which: linearizable, serializable, snapshot isolation, read committed, read-your-writes, monotonic reads, consistent prefix, causal, or eventual.
+3. **Walk the failure.** Take each component through a crash, slowness, a network partition, a restart with stale state, a clock jump, and a retry. Write out the event sequence.
+4. **Prefer simple.** One well-run relational database with replicas covers a lot. Recommend distribution only when a named load parameter demands it.
+5. **Be concrete.** Give schemas, keys, SQL, partition keys, message formats, and failure sequences.
+6. **Name the trade-off.** Say what each choice gives up, and when the user would regret it.
+7. **Check product facts.** The book dates from 2017. When a recommendation depends on what a specific product does today, check its current documentation, cite it, and date the check. This is `superpowers:verification-before-completion` applied to claims about products.
 
-1. **Start from the workload.** Ask for (or estimate) the load parameters that matter: reads/writes per second, read/write ratio, data size and growth, fan-out, access patterns, latency targets at p50/p99/p999, consistency needs, and how bad each kind of failure would be. No numbers, no scaling advice — state assumptions explicitly if the user can't provide them.
-2. **Name the guarantee.** Don't say "consistent" or "safe" loosely. Say which one: linearizable, read-your-writes, monotonic reads, consistent prefix, serializable, snapshot isolation, read committed, causal, eventual. Most bugs live in the gap between the guarantee someone assumed and the one they have.
-3. **Walk the failure.** For each component, ask what happens when it crashes, is slow, is partitioned, restarts with old state, or its clock jumps. Walk a concrete failure sequence step by step.
-4. **Prefer simple.** Many systems don't need distribution. One well-provisioned relational database with replicas covers a lot. Recommend distributed machinery only when the workload demands it, and name the cost.
-5. **Be concrete.** Give schemas, key designs, SQL, partition keys, message formats, and step-by-step failure sequences — not just principles.
-6. **Name the trade-off.** Every choice gives something up. Say what, and when the user would regret it.
+## Brainstorming's discipline, reused here
 
-## A. Design a new data system
+Flows 2 and 3 borrow brainstorming's elements so they feel the same as the rest of superpowers:
+- **Classify and announce the path** before the first question, so the user can override it. Take the heavier path when in doubt. If hidden complexity appears, step up; never step down mid-task.
+- **Discover intent:** ask **one question per message**, multiple choice where possible, with the **recommended option first** and its reason. Use `references/question-bank.md`. Skip anything the request already answers.
+- **Write back your understanding:** outcome, constraints, success criteria. Separate what the user said from what you assumed, and invite correction.
+- **Propose 2–3 options** with trade-offs, leading with your recommendation.
+- **Present in sections** scaled to complexity, asking after each whether it looks right.
+- **Write the document**, then run a **self-review**: placeholders, contradictions, ambiguity, scope, plus this skill's own checks (named guarantees, failure walk, product facts sourced).
+- **User review gate:** ask the user to review the written document before any hand-off.
+- **Hand off**, never implement: adoption or fixes go to `superpowers:brainstorming`, then `writing-plans`.
 
-1. Gather requirements and load parameters (ground rule 1). Identify the core entities and the main read and write paths, and which operations need strong guarantees (money, inventory, uniqueness) versus which can be eventually consistent (feeds, analytics, recommendations).
-2. Pick the **system of record** for each kind of data — the authoritative source. Everything else (caches, search indexes, analytics copies, materialized views) is **derived data**, rebuilt from the source. Read `references/derived-data.md` §Unbundling.
-3. Choose data models and stores per access pattern: relational, document, graph, key-value, wide-column, search, column-oriented analytics, object storage. Use `references/decision-guides.md`. Avoid one-store-for-everything if access patterns differ wildly, but avoid needless sprawl too.
-4. Design the dataflow between stores: synchronous writes, CDC, event log, batch jobs. Prefer a log-based flow (CDC or an event log) over dual writes from application code, which drift out of sync on partial failure.
-5. Plan evolution: encoding formats with explicit schemas, backward and forward compatibility, rolling upgrades (`references/encoding-evolution.md`).
-6. Plan for scale only as far as the numbers require: replication for availability and read scaling, partitioning when data or write volume outgrows one node (`references/replication.md`, `references/partitioning.md`).
-7. Identify every place correctness needs coordination — uniqueness constraints, balances, inventory, bookings — and decide how each is enforced: DB constraint, serializable transaction, single-partition log processing, or consensus (`references/transactions.md`, `references/distributed.md`).
-8. Walk the failure modes (ground rule 3) and the operational story: monitoring, backups, restore testing, reprocessing.
-9. Write it up with `assets/design-doc-template.md`, including rejected alternatives.
+Documents go under `docs/superpowers/` next to brainstorming's specs (user preferences override):
+- decisions: `docs/superpowers/decisions/YYYY-MM-DD-<topic>.md`
+- reviews: `docs/superpowers/reviews/YYYY-MM-DD-<topic>-data-review.md`
 
-## B. Review an existing architecture
+Commit them, as brainstorming does with specs.
 
-1. Map the system: components, stores, the system of record for each entity, dataflows, and which guarantees each link provides. Draw it (a Mermaid diagram is fine).
-2. Work through `references/review-checklist.md`. Prioritize by blast radius: data loss and silent corruption first, then correctness anomalies, then availability, then performance, then operability.
-3. For each finding give: where, what can go wrong (as a concrete event sequence), how likely and how bad, and the fix with its trade-off.
-4. Call out dual writes, check-then-act races, reliance on wall-clock ordering, missing idempotency, locks without fencing, and assumptions about isolation levels — these are the most common serious issues.
-5. Credit the parts that are sound.
+## 1. Design a data architecture from scratch
 
-## C. Choose a technology
+This is `superpowers:brainstorming`'s architectural path. Brainstorming leads: its questions, approval gates, spec location, and hand-off to `writing-plans`. This skill layers in a **data track** (details in `references/superpowers-hooks.md` §1):
+- **Questions** (from `references/question-bank.md` §1, asked in brainstorming's queue, one per message):
+  - load parameters;
+  - operations needing strong guarantees (money, inventory, uniqueness) vs those that can lag;
+  - the source of truth for each entity;
+  - freshness needs for derived data;
+  - growth horizon;
+  - the operational constraints the team has to live with.
+- **Approaches:** 2–3 data architectures that differ in substance, not in brand. For example: a single relational store plus replicas; a relational store plus a log feeding derived stores through CDC; a partitioned store sharded by tenant. Compare them on guarantees, scaling headroom, operational cost, and failure behaviour.
+- **Spec:** add the sections from `assets/spec-sections.md` to brainstorming's spec:
+  - load and targets;
+  - guarantees required;
+  - systems of record and derived data;
+  - data model;
+  - replication and partitioning;
+  - correctness mechanisms;
+  - encoding and evolution;
+  - failure analysis;
+  - operations.
+- **Self-review:** add the data checks from the hooks file to brainstorming's spec self-review.
+- **Design only?** If the user wants the architecture but not the implementation yet, stop once the spec is approved, and tell them `writing-plans` is the next step when they're ready. Brainstorming's gates still apply up to that point.
 
-1. Pin down the workload and the non-negotiables (ground rule 1).
-2. Use `references/decision-guides.md` to compare categories first (e.g. document vs relational, log-based vs traditional broker), then specific products.
-3. Check current product facts against their docs where the decision hinges on them (currency note).
-4. Record the decision with `assets/decision-record-template.md`: context, options, decision, consequences, and the conditions that would make you revisit it.
+## 2. Choose a technology
 
-## D. Schema, encoding, and API evolution
+For "Postgres or DynamoDB?", "Kafka or SQS?", "Avro or Protobuf?", "do we need a separate search index?", and similar questions.
 
-Read `references/encoding-evolution.md`.
+**Classify and announce** one path:
+- **Quick:** a low-stakes, reversible choice where the workload is clear. Answer in chat, recommendation first, with the trade-off and when you'd revisit it. No document.
+- **Decision:** a hard-to-reverse or high-stakes choice. Run the full process below and write a decision record.
+- **Spike:** the choice hinges on an unknown that only a measurement settles, such as tail latency under your write pattern or behaviour under failover. Present the question and a throwaway benchmark or experiment in 2–3 sentences, get a nod, run it as cheaply as correctness allows, then continue on the decision path with the results. Label anything built as throwaway.
 
-1. Identify every place data crosses a process boundary or outlives the code that wrote it: databases, service APIs, message queues, files, caches.
-2. For each, determine who writes and who reads, and whether old and new code run at the same time (rolling deploys, mobile clients, long-lived data). You then need backward compatibility (new code reads old data) and forward compatibility (old code reads new data).
-3. Recommend formats and rules: explicit schemas (Protobuf, Avro, or JSON Schema), only add optional fields with defaults, never reuse field tags or names, don't remove required fields, and watch for old code dropping unknown fields on read-modify-write.
-4. For database schema changes, plan expand–migrate–contract: add new structure, dual-read/backfill, switch, then remove old structure. Note which DDL operations lock or rewrite tables in the specific database.
+**Decision path:**
+1. **Discover intent**, one question per message (`references/question-bank.md` §2). Cover the workload and access patterns, the non-negotiable guarantees, operational constraints (managed vs self-hosted, team skills, cloud, budget), the time horizon, and what's already in use.
+2. **Write back your understanding.** Separate what the user said from your assumptions, and invite correction.
+3. **Compare categories before products** (`references/decision-guides.md`), for example log-based vs traditional broker before Kafka vs Kinesis. Keep 2–3 real options and lead with your recommendation.
+4. **Check product facts** in current docs, with dated citations (ground rule 7).
+5. **Present in sections**, asking after each whether it looks right:
+   - the options and how each fits the workload;
+   - how each behaves under the named failures;
+   - operational cost;
+   - migration and exit cost.
+6. **Write the decision record** with `assets/decision-record-template.md` and commit it.
+7. **Self-review:**
+   - brainstorming's placeholder, contradiction, ambiguity, and scope checks;
+   - guarantees named precisely;
+   - failure behaviour covered for each option;
+   - product facts cited and dated;
+   - a "revisit when" condition stated.
+8. **User review gate.** Ask the user to review the record.
+9. **Hand off.** Adopting the choice is a new `superpowers:brainstorming` request, usually architectural when it replaces an existing store.
 
-## E. Scale it
+## 3. Review a data architecture or an incident
 
-1. Get the numbers. Find the actual bottleneck: reads, writes, storage, a hot key, fan-out, or one expensive query. Latency percentiles, not averages.
-2. Cheaper fixes first: indexes, query fixes, caching, bigger machine, read replicas, moving analytics off the OLTP database.
-3. Replication (`references/replication.md`): choose the topology, sync vs async, and decide which read-after-write guarantees the application needs, and how to provide them.
-4. Partitioning (`references/partitioning.md`): choose the partition key from the access pattern, check for skew and hot spots, decide how secondary indexes work, and plan rebalancing and request routing.
-5. Say what gets harder: cross-partition queries and transactions, uniqueness, and ordering.
-6. Back-of-envelope the result: nodes needed, data per node, headroom.
+For "review our data architecture", "what could go wrong with this pipeline?", "why did we lose writes last week?", and design-doc reviews. For a **live** incident, `superpowers:systematic-debugging` leads (hooks §7). This flow is for reviews and post-incident analysis.
 
-## F. Concurrency and transaction correctness
+**Classify and announce** one path:
+- **Targeted:** one component, flow, or incident. Go deep, with a short report.
+- **Full:** the whole data architecture. Map everything, then prioritise.
 
-Read `references/transactions.md`.
+**Process:**
+1. **Discover intent**, one question per message (`references/question-bank.md` §3):
+   - what prompted the review;
+   - which flows matter most;
+   - known incidents;
+   - the guarantees the business assumes;
+   - what can change.
+2. **Write back your understanding**, including which guarantees you'll check against.
+3. **Map the system:**
+   - components and stores;
+   - the system of record for each entity;
+   - dataflows, and the guarantee each link provides;
+   - replication and partitioning.
 
-1. Identify the invariant at stake (no double booking, balance ≥ 0, unique username, at most N seats).
-2. Identify the database and the **actual** isolation level in use (check config; defaults differ, and "repeatable read" means different things in different products).
-3. Walk the interleaving: write out two concurrent transactions step by step and show whether the invariant can break. Classify it: dirty read/write, read skew, lost update, write skew, phantom.
-4. Recommend the lightest fix that actually prevents it: atomic update (`UPDATE … SET x = x + 1`), compare-and-set, `SELECT … FOR UPDATE`, a unique constraint, materializing the conflict, or serializable isolation (with retries on serialization failure).
-5. If the operation spans services or databases, go to use case G (no single transaction covers it).
-6. Show the corrected code or SQL, and a test that reproduces the race if feasible.
+   A Mermaid diagram is fine. For an incident, add a timeline.
+4. **Walk it** with `references/review-checklist.md`. Prioritise by blast radius: data loss and silent corruption first, then correctness anomalies, availability, performance, and operability. For each finding, write the concrete event sequence that goes wrong, how likely and how bad it is, and the fix with its trade-off.
+5. **Look hardest for** dual writes, check-then-act races, ordering by wall clock, missing idempotency, locks without fencing, and assumptions about isolation levels.
+6. **Present findings in sections**, starting with Critical and asking after each whether it looks right. Use superpowers' severities:
+   - **Critical:** data loss, silent corruption, broken invariants.
+   - **Important:** correctness or availability problems that will surface under load or failure.
+   - **Minor:** everything else.
+7. **Write the review** with `assets/review-template.md` and commit it.
+8. **Self-review:**
+   - every finding cites evidence you actually read or ran;
+   - every failure is written as an event sequence;
+   - guarantees are named;
+   - product facts are sourced;
+   - unverified areas are listed.
+9. **User review gate.**
+10. **Hand off.** Each fix the user wants becomes its own `superpowers:brainstorming` request, which decides bounded vs architectural.
 
-## G. Distributed coordination and failure
+## Reference files
 
-Read `references/distributed.md`.
-
-1. Name what the user is actually trying to guarantee: mutual exclusion, a single leader, uniqueness, exactly-once effect, ordering, or an atomic commit across systems.
-2. Check for the classic traps: timeouts treated as proof of death, wall-clock timestamps used to order events or for last-write-wins, locks or leases without fencing tokens, process pauses (GC, VM suspension), retries without idempotency, and distributed transactions across heterogeneous systems.
-3. Recommend: fencing tokens with a storage check, idempotency keys and deduplication, consensus-backed coordination (etcd, ZooKeeper, or the database's own mechanisms) for leader election and locks, a single-leader log for total ordering, and the outbox pattern or CDC instead of dual writes and 2PC.
-4. Say what the system does when the coordination service is unreachable (it must stop, not guess).
-
-## H. Data pipelines and derived data
-
-Read `references/derived-data.md`.
-
-1. Identify the sources of truth, the derived outputs, and freshness needs. Batch (bounded input, rerunnable) versus stream (unbounded, low latency) — or both.
-2. Design for rerunnability: immutable inputs, deterministic transforms, outputs replaced wholesale or written idempotently. The ability to reprocess from the source is the biggest reliability lever.
-3. For keeping stores in sync, prefer CDC or an event log as the single ordered source, feeding each derived store, over dual writes.
-4. For stream processing, decide on event time vs processing time, windowing and late-data handling, join type, state and checkpointing, and how exactly-once *effect* is achieved (idempotent sinks, transactional commits, deduplication).
-5. For event sourcing, separate commands (validated) from events (immutable facts), and plan snapshotting, schema evolution of events, and deletion (e.g. for privacy law).
-
-## I. Diagnose an incident
-
-1. Get the symptoms and a timeline. Ask which guarantees the code assumed.
-2. Match the symptoms to known failure patterns (the "symptoms" column of `references/review-checklist.md` §Diagnosis): stale reads after writes → replication lag; lost updates → read-modify-write race; two leaders → failed failover / no fencing; inconsistent ordering → clock skew or multi-leader conflicts; one slow shard → hot key or skew; cascading timeouts → retries without backoff or queueing.
-3. Propose how to confirm the hypothesis (which metrics, logs, or a reproduction), then the immediate mitigation and the durable fix.
-
-## J. Learn, explain, interview prep
-
-- **Explain** a concept at the level asked, using a concrete example and a step-by-step failure scenario. Connect it to the trade-off it resolves. Offer a diagram when the mechanism is spatial (replication, partitioning, LSM compaction).
-- **Quiz**: ask one question at a time, wait for the answer, then correct and explain. Mix recall ("what does write skew mean?") with application ("this booking code runs at snapshot isolation — can it double-book?").
-- **System design practice**: play interviewer. Give a prompt, make the user drive requirements and estimates, then probe with follow-ups on data model, scaling, consistency, and failure. Finish with feedback against the ground rules above.
+- `references/superpowers-hooks.md`: the data track for brainstorming, and additions to writing-plans, TDD, execution, verification, code review, and debugging. **Read it whenever this skill is active inside a superpowers step.**
+- `references/question-bank.md`: questions with recommended defaults for flows 1–3.
+- `references/foundations.md`: reliability, scalability, and maintainability; load and percentiles; data models; storage engines; OLTP vs OLAP.
+- `references/encoding-evolution.md`: formats, schema evolution, compatibility.
+- `references/replication.md`: single-leader, multi-leader, leaderless; replication-lag anomalies; conflicts; quorums.
+- `references/partitioning.md`: key-range vs hash partitioning, hot spots, secondary indexes, rebalancing, routing.
+- `references/transactions.md`: isolation levels, the anomaly catalogue, and how to prevent each anomaly in code.
+- `references/distributed.md`: partial failure, timeouts, clocks, fencing, linearizability, 2PC, consensus, practical patterns.
+- `references/derived-data.md`: batch, stream, CDC, event sourcing, exactly-once, unbundled databases, end-to-end correctness.
+- `references/decision-guides.md`: trade-off tables for common choices.
+- `references/review-checklist.md`: review questions and a symptom → cause → fix table for incidents.
+- `references/review-lens.md`: a short checklist for the superpowers code reviewer, used only when a change touches data.
+- `assets/spec-sections.md`, `assets/decision-record-template.md`, `assets/review-template.md`: output formats.
+- `README.md`: the human-facing guide to this skill with superpowers, `software-design`, and `clean-python`.
 
 ## Credit
 
-Condensed and paraphrased from Martin Kleppmann, *Designing Data-Intensive Applications* (O'Reilly, 1st ed., 2017). The book, with its extensive references, is worth reading in full.
+Condensed and paraphrased from Martin Kleppmann, *Designing Data-Intensive Applications* (O'Reilly, 1st ed., 2017). Superpowers is by Jesse Vincent (MIT), included in this repo as a reference at `vendor/superpowers`.

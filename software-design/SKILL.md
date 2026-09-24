@@ -12,7 +12,7 @@ It never runs its own design process, never produces a design document separate 
 **Lanes with other skills:**
 - **`software-design`** decides how the system is split into modules, what each one hides, and what its interface looks like.
 - **`clean-python`** decides how each module is written in Python: protocols, dataclasses, typing, errors, pytest, and tooling. For Python work, use both. This skill's module cards say *what* the interface is; clean-python says how it's expressed (for example, a `typing.Protocol` with typed signatures and docstrings).
-- **`data-intensive`** owns storage, concurrency, and data-system choices.
+- **`data-intensive`** decides which store owns each piece of data, which guarantee each operation needs, and how data flows and fails. It adds a "Data architecture" section to the same spec. This skill's module cards say which module hides those choices (e.g. a repository that hides the store and isolation level).
 - **`pragmatic-programmer`** runs only when the user asks for it.
 
 ## The lens in one paragraph
