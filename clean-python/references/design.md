@@ -1,5 +1,7 @@
 # Design principles for Python code
 
+> When `software-design` is active, it decides how the system is split into modules and what each hides. Use this file for the Python side: contracts, errors, SOLID in Python, patterns, and keeping frameworks at the edges.
+
 ## Contents
 1. Contracts and defensive programming
 2. Error handling

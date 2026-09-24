@@ -1,75 +1,86 @@
 ---
 name: clean-python
-description: Applies clean-code practices for Python when designing, writing, reviewing, or refactoring Python code — Pythonic idioms and protocols, contracts and error handling, cohesion and coupling, SOLID in Python, decorators, descriptors, generators and async, testing with pytest and mocks, design patterns, and clean architecture. Use whenever the user writes, reviews, refactors, or asks how to structure Python code, a Python package, or a Python service, or asks whether some Python is "Pythonic", clean, or well designed.
+description: Python lens for superpowers workflows, based on Mariano Anaya's "Clean Code in Python" — Pythonic idioms and protocols, typing, error handling, SOLID in Python, decorators, descriptors, generators and async, pytest, mocks, and tooling (formatter, linter, type checker). Use whenever superpowers work touches Python code — brainstorming a Python design, writing-plans for a Python project, test-driven-development with pytest, executing plan tasks in Python, verification before completion, systematic-debugging of Python bugs, and requesting or receiving code review of Python — and when asked to review or judge Python code that isn't a commit range. Never runs its own process.
 ---
 
-# Clean Python
+# Clean Python (superpowers lens)
 
-Clean code is code that other people can read, understand, and change safely. Formatting and style are necessary but not enough: the real question is whether the code expresses its ideas clearly and keeps technical debt low. Leave formatting to tools and spend human (and Claude) attention on design and intent.
+This skill adds a Python lens to superpowers. **Superpowers owns the process**: the order of steps, one question per message, approval gates, where specs and plans live, test-first, review, and verification. **This skill owns the Python judgment**: which idioms, types, tests, tools, and error handling make Python code clean, and what to look for when it isn't.
 
-This skill has four modes. Pick one from the request, or combine them (e.g. review → refactor):
+It never runs its own question round, design document, plan, or approval gate. It writes Python only inside a superpowers implementation step (a TDD cycle or a plan task).
 
-| Mode | When | Output |
+**Lanes with other skills:**
+- **`software-design`** decides how the system is split into modules and what each one hides. **clean-python** decides how each module is written in Python: protocols, dataclasses, typing, errors, iteration, and tests.
+- **`data-intensive`** owns storage, concurrency, and data-system choices.
+- **`pragmatic-programmer`** runs only when the user asks for it.
+
+## The lens in one paragraph
+
+Clean Python reads well and changes safely. Formatting and style are left to tools (formatter, linter, type checker in CI). Human attention goes to intent:
+- Use the language's protocols (iteration, context managers, properties, dataclasses) rather than hand-rolled equivalents.
+- Keep functions small and at one level of abstraction.
+- Type-annotate public interfaces.
+- Raise specific exceptions at the right level and never swallow them.
+- Inject dependencies instead of creating them inside.
+- Prefer composition to inheritance for code reuse.
+- Test the public interface with pytest.
+- Every principle is a guideline: practicality beats purity.
+
+Reference files:
+- `references/superpowers-hooks.md`: exactly what to do at each superpowers step. **Read it whenever this skill is active.**
+- `references/pythonic.md`: idioms, protocols, decorators, descriptors, generators, async, gotchas.
+- `references/design.md`: contracts, errors, cohesion and coupling, SOLID in Python, patterns, architecture (the Python side; module decomposition is `software-design`'s job).
+- `references/testing.md`: pytest, fixtures, mocks, coverage, property-based and mutation testing, refactoring safely.
+- `references/review-checklist.md`: the full Python smell checklist with fixes.
+- `references/review-lens.md`: a short checklist to paste into the superpowers code reviewer's prompt.
+- `assets/pyproject-tooling.toml`: starter config for black, ruff, mypy, pytest, and coverage.
+- `assets/spec-sections.md`: Python sections to add to a brainstorming spec.
+- `README.md`: the human-facing guide to using this skill with superpowers.
+
+## Where it plugs in
+
+| Superpowers step | What this skill adds | Details |
 |---|---|---|
-| **Design** | New module, package, or service; "how should I structure this?" | Component sketch, key interfaces with type hints and docstrings, dependency direction |
-| **Write** | "Write a function/class/script that…" | Idiomatic, typed, documented code plus tests |
-| **Review** | "Review this", PRs, "is this Pythonic?" | Prioritized findings with before/after snippets |
-| **Refactor** | "Clean this up", "reduce duplication", legacy code | Safety net of tests first, then small verified steps |
+| `brainstorming`: explore context | Python version, packaging, tooling present, typing level, test setup, framework conventions | hooks §1 |
+| `brainstorming`: questions and approaches | Python-specific choices that change the design (sync vs async, Protocol vs ABC, dataclass vs model library, typing strictness), asked in brainstorming's format | hooks §1 |
+| `brainstorming`: design sections and spec | A "Python implementation notes" section: package layout, extension points, value objects, error hierarchy, dependency injection, typing | hooks §1, `assets/spec-sections.md` |
+| `brainstorming`: bounded path | A quick Python check of the change (mutable defaults, swallowed errors, a new flag argument, a new dependency) | hooks §2 |
+| `writing-plans` | Exact file paths per package layout; a tooling task if checks are missing; verification commands in every task | hooks §3 |
+| `test-driven-development` | pytest idioms: parametrize, fixtures, `pytest.raises`, Hypothesis; mocks only at boundaries with autospec, patched where looked up | hooks §4 |
+| `subagent-driven-development` / `executing-plans` | Pythonic implementation rules for each task; run the formatter, linter, and type checker before reporting done | hooks §5 |
+| `verification-before-completion` | The commands that count as evidence: `pytest`, `ruff check`, `mypy`, formatter check, with their output | hooks §6 |
+| `requesting-code-review` | `references/review-lens.md` pasted into the reviewer's requirements | hooks §7 |
+| `receiving-code-review` | Check Python feedback against the idioms before acting; push back on suggestions that make code less Pythonic | hooks §7 |
+| `systematic-debugging` | Python-specific hypotheses and tools (mutable defaults, late binding, iterator exhaustion, patch location, `breakpoint()`, `-X dev`, `tracemalloc`) | hooks §8 |
+| `finishing-a-development-branch` | All tool checks green; optional list of Python debt found | hooks §9 |
 
-Reference files (read when the mode calls for them):
+## The one thing this skill starts: a Python code review outside a commit range
 
-- `references/pythonic.md` — idioms and protocols: slicing, context managers, comprehensions, properties, dataclasses, iteration, magic methods, decorators, descriptors, generators, async, and common gotchas. Read for Write, Review, and Refactor.
-- `references/design.md` — contracts, defensive programming, error handling, cohesion/coupling, DRY/YAGNI/KIS, EAFP, inheritance vs composition, function arguments, SOLID, patterns, and architecture. Read for Design and Review.
-- `references/testing.md` — unit testing, pytest, fixtures, mocks, coverage, property-based and mutation testing, and safe refactoring. Read for Write and Refactor.
-- `references/review-checklist.md` — a code-smell checklist with fixes. Read for Review.
-- `assets/pyproject-tooling.toml` — a starter tool config (formatter, linter, type checker, tests, coverage).
+Superpowers' review covers a range of commits. When the user asks to review a Python file, package, or snippet, or asks "is this Pythonic?", this skill reviews it directly:
 
-If the `software-design` skill is also installed, use it for module-level and system-level complexity questions (deep modules, information hiding), and this skill for Python-specific implementation and idioms.
+1. **Read for intent:** what is the code trying to do, and does its structure show that?
+2. **Walk `references/review-checklist.md`** in priority order: correctness hazards, then design, idioms, docs and typing, tests, and tooling. Style goes last, and only if no tool would catch it.
+3. **Write each finding** with location (file:line), the problem, why it matters, and a short before/after snippet. Use superpowers' severities:
+   - **Critical:** a bug, data loss, a security issue, or swallowed errors.
+   - **Important:** design or idiom problems that will spread.
+   - **Minor:** local issues.
+4. **Credit what's done well.** Keep the review in proportion: a 20-line script doesn't need architecture advice.
+5. **Follow `superpowers:verification-before-completion`:** if you claim a check fails or passes, run it and show the output.
+6. **Hand off.** Fixes the user wants go through `superpowers:brainstorming` (brainstorming decides bounded vs architectural), then TDD. Don't rewrite the code inside the review.
 
-## Baseline for all modes
+## Rules
 
-1. **Automate the boring parts.** Code should pass an autoformatter (black or ruff format), a linter (pylint, flake8, or ruff), and a type checker (mypy or pyright), all run in CI. If the project has none, suggest `assets/pyproject-tooling.toml`. Don't spend review comments on things a tool would catch — recommend the tool instead.
-2. **Follow PEP 8** and the project's existing conventions. Consistency with the codebase beats personal preference.
-3. **Type-annotate public interfaces.** Annotations document intent and let tools catch mistakes. They complement docstrings, they don't replace them.
-4. **Docstrings explain, comments are rare.** Public modules, classes, and functions get docstrings describing what they do, their inputs, outputs, and exceptions. Inline comments should explain *why* something non-obvious is done, never restate the code. Don't leave commented-out code.
-5. **Practicality beats purity.** Every principle here is a guideline. When following one would make the code worse for the situation at hand, say so and don't follow it.
-
-## Mode: Design
-
-1. Clarify the domain: what the code must do, what will likely change, and what external things it touches (databases, APIs, files, frameworks).
-2. Separate concerns into cohesive components with low coupling. Keep the domain logic independent of frameworks and I/O; put adapters at the edges and have them depend on the domain, not the other way round (dependency inversion). Read `references/design.md` §Architecture.
-3. Name components after domain concepts so the structure reveals intent.
-4. Define the key interfaces: abstract base classes or `typing.Protocol` for extension points, small interfaces rather than large ones, dependencies passed in (injected) rather than created inside.
-5. Plan the package layout: group by similarity, avoid giant modules, keep constants and shared definitions in predictable places, and expose the public API through `__init__.py` / `__all__`.
-6. Plan testability: every component should be testable without its real external dependencies.
-7. Show the design as type-hinted signatures with docstrings before writing implementations.
-
-## Mode: Write
-
-1. Start from the interface: signature with type hints and a docstring.
-2. Write it the Pythonic way — see `references/pythonic.md`. Prefer the language's protocols (iteration, context managers, properties, dataclasses) to hand-rolled equivalents.
-3. Keep functions small and doing one thing, at one level of abstraction. Keep argument lists short; group related arguments into an object.
-4. Handle errors deliberately: raise specific exceptions at the right level of abstraction, chain them with `raise … from e`, never silence them with a bare `except: pass`.
-5. Write tests alongside the code (pytest). Cover the normal case, boundaries, equivalence classes, and edge cases.
-6. Run the formatter, linter, type checker, and tests if they're available, and fix what they report before presenting the code.
-
-## Mode: Review
-
-1. Read the code for intent first: what is it trying to do, and does the structure reflect that?
-2. Walk `references/review-checklist.md`. For each finding give: location, the problem, why it matters (readability, maintainability, correctness, testability), and a concrete before/after snippet.
-3. Prioritize: correctness bugs and dangerous patterns (mutable defaults, swallowed exceptions, shared state in descriptors or class attributes) first, then design problems (coupling, cohesion, SOLID violations), then idioms, and style last (and only if no tool covers it).
-4. Credit what's done well.
-5. Keep it proportional: a 20-line script doesn't need architecture advice.
-
-## Mode: Refactor
-
-1. **Tests first.** If the code has no tests covering the behaviour you're about to change, write characterization tests before touching it. Refactoring means changing structure without changing behaviour, and tests are the only proof of that.
-2. Find the smells with `references/review-checklist.md`.
-3. Change in small steps, running tests after each: rename, extract function, introduce parameter object, replace conditional with polymorphism, replace inheritance with composition, extract a decorator for repeated cross-cutting logic, split a large module into a package that re-exports the old names.
-4. Keep the public interface stable where callers depend on it. When a module grows too big, turn it into a package whose `__init__.py` imports the old names so nothing breaks.
-5. Update the tests as the code evolves — test code deserves the same care as production code.
-6. Summarize what changed and why, and note anything left for later.
+- Follow superpowers' conventions:
+  - one question per message, recommended option first;
+  - specs in `docs/superpowers/specs/`;
+  - plans via `writing-plans`;
+  - a failing test before implementation code.
+- Say when you're using the lens: "Using clean-python for the pytest structure."
+- Follow the project's existing conventions and tools over this skill's defaults. Suggest `assets/pyproject-tooling.toml` only when checks are missing.
+- Don't spend review comments on what a tool would catch. Recommend the tool instead.
+- Refactoring is a behavior-preserving change. It needs green tests before and after, and goes in its own plan tasks, separate from behavior changes.
+- If a principle here conflicts with a superpowers rule, follow superpowers and mention the tension.
 
 ## Credit
 
-Condensed and paraphrased from Mariano Anaya, *Clean Code in Python* (2nd ed.). The book is worth reading in full for the worked examples.
+Condensed and paraphrased from Mariano Anaya, *Clean Code in Python* (2nd ed.). Superpowers is by Jesse Vincent (MIT), included in this repo as a reference at `vendor/superpowers`.
