@@ -35,26 +35,35 @@ This protocol decides whether the skill works, so follow it closely.
 
 Don't ask about anything you can settle from the material, the conversation, or a clear default. Examples are font choice, or whether to use a bar chart for comparing amounts.
 
-**How to ask.** In Claude Code, prefer the `AskUserQuestion` tool when it is available. Put the recommended option first, label it "(Recommended)", and put the book reason in its description. Otherwise use this plain-text form:
+**How to ask.** Use the same format as superpowers' brainstorming skill: one question per message.
+
+- **Ask one question per message.** If a topic needs more exploration, split it into several questions and ask them in turn.
+- **Prefer multiple choice.** Open-ended is fine when options would be artificial (for example, "what's the exact budget figure?").
+- **Lead with your recommendation.** Put the recommended option first, label it "(Recommended)", and give its reason (the book principle) and what changes if the user picks differently. Every other option must be a real alternative that would change the storyline.
+- In Claude Code, prefer the `AskUserQuestion` tool with a single question per call. Otherwise use this plain-text form:
 
 ```
-Q3 of ~6: What question should the deck answer in the audience's mind?
-→ Recommended: "Should we approve $1.2M for the warehouse system?"
-  Why: Your notes describe a problem plus a costed fix, which is the classic
-  "seeking approval" pattern. Its question is always "Should I approve?"
-  If instead: "How do we fix the backlog?" gives a steps-based Key Line and
-  no approval ask.
-  (Reply "yes", edit it, or pick: a) How should we fix it?  b) Which option?)
+Q3 of ~6 — What question should the deck answer in the audience's mind?
+a) (Recommended) "Should we approve $1.2M for the warehouse system?"
+   Why: your notes describe a problem plus a costed fix, which is the classic
+   "seeking approval" pattern. Its question is always "Should I approve?"
+   If instead: b) gives a steps-based Key Line and no approval ask;
+   c) gives a criteria-based Key Line.
+b) "How do we fix the backlog?"
+c) "Which of the three options should we choose?"
+Reply with a letter, or edit an option.
 ```
 
 Rules for the loop:
 
-- Ask at most three questions per turn, ordered by dependency. Audience comes before the Question, the Question before the Answer, and the Answer before the Key Line. A later answer often changes an earlier one.
+- Ask in dependency order, one question at a time: audience before the Question, the Question before the Answer, and the Answer before the Key Line. A later answer often changes an earlier one; say so when it does.
+- If the request or material already settles something, don't ask it again. Reflect it back instead.
 - Show a running count ("Q3 of ~6") so the user can see the loop will end.
-- After each round, reflect the emerging storyline back in 3–5 lines (S, C, Q, A, Key Line) so the user corrects the structure rather than isolated facts.
+- **Write back your understanding** after each group of questions (audience, then S-C-Q-A, then the Key Line). Give the emerging storyline in 3–5 lines, keep what the user said separate from your assumptions, and invite correction.
 - Keep asking until the storyline passes the Phase 4 tests. Don't stop because the user seems impatient. Instead, offer an exit.
 - **The exit.** If the user says "just go", "use your judgment", or similar, adopt every pending recommendation. Record each one in an **Assumptions** block at the top of `storyline.md`, and continue. Never stall.
 - If an answer creates a contradiction, name it and ask again. For example: the Complication says costs are the problem, but the proposed Answer is about speed. Contradictions are the most valuable thing the loop surfaces.
+- **Approval gate.** Present the governing thought and Key Line, then stop and wait for an explicit yes before starting Phase 5. Approving the audience or the Question doesn't approve the storyline.
 
 ## Workflow
 

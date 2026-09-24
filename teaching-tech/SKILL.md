@@ -17,20 +17,22 @@ This skill turns the practical, research-backed advice in *Teaching Tech Togethe
 
 The book's key assessment tool is the multiple-choice question whose wrong answers each reveal a *specific* misunderstanding. This skill uses the same tool on the user: every question it asks is an MCQ where each option represents a distinct, plausible interpretation of the user's intent that would lead to a *different* design. The user's pick tells Claude exactly which branch to take.
 
-**When to ask.** Before producing anything substantial, and again whenever a load-bearing decision is unresolved. Load-bearing decisions are listed per use case in `references/question-bank.md`. Never silently infer: audience, prior knowledge, goal/objective, format and duration, constraints, and success criteria. Don't ask about things the material or conversation already settles, or cosmetic choices with a sensible default.
+**When to ask.** Before producing anything substantial, and again whenever a load-bearing decision is unresolved — one question per message. Load-bearing decisions are listed per use case in `references/question-bank.md`. Never silently infer: audience, prior knowledge, goal/objective, format and duration, constraints, and success criteria. Don't ask about things the material or conversation already settles, or cosmetic choices with a sensible default.
 
-**How to ask.**
-- Use the `AskUserQuestion` tool when available (up to 4 questions per call). Otherwise use the plain-text format below.
-- **Put the recommended option first**, label it "(Recommended)", and in its description give the reason — tied to a principle from this skill — plus what changes if the user picks differently.
-- Make every option a **plausible distractor with diagnostic power**: a real alternative that someone could reasonably want and that changes the output. No filler options, no joke options.
+**How to ask.** Use the same format as superpowers' brainstorming skill: one question per message.
+- **Ask one question per message.** If a topic needs more exploration, split it into several questions and ask them in turn. With the `AskUserQuestion` tool, send a single question per call. Otherwise use the plain-text format below.
+- **Prefer multiple choice.** Open-ended is fine when options would be artificial (for example, "what's the learners' first language?").
+- **Lead with your recommendation.** Put the recommended option first, label it "(Recommended)", and give its reason (tied to a principle from this skill) plus what changes if the user picks differently.
+- **Make every option diagnostic.** Each option is a plausible distractor: a real alternative that someone could reasonably want and that changes the output. No filler options, no joke options.
 - Derive the recommendation from the user's own material and context first; fall back to the book's defaults.
-- Ask in **dependency order**: audience → goal → format/constraints → content → assessment → delivery details. A later answer can reopen an earlier one; say so when it does.
+- **Ask in dependency order:** audience → goal → format/constraints → content → assessment → delivery details. A later answer can reopen an earlier one; say so when it does.
+- If the request or material already settles something, don't ask it again. Reflect it back instead.
 
 Plain-text format:
 ```
 Q3 of ~8 — What should learners be able to do by the end?
   a) (Recommended) Write a 20-line script that reads a CSV and prints summary stats
-     Why: your notes describe analysts doing this by hand in Excel — an authentic task
+     Why: your notes describe analysts doing this by hand in Excel. An authentic task
      gives an early win (motivation) and a concrete summative check.
      If different: b/c shift the lesson toward concepts or tooling instead.
   b) Explain what a DataFrame is and when to use one
@@ -41,11 +43,13 @@ Reply with a letter, or edit an option.
 
 **Rhythm.**
 - Show a running count ("Q3 of ~8") so the user can see the loop ends.
-- After each round, **reflect back** the emerging plan in 3–6 lines (audience, objective, format, key assessment) so the user corrects the design, not isolated facts.
+- **Write back your understanding** after each group of related questions. Give the emerging plan in 3–6 lines (audience, objective, format, key assessment), keep what the user said separate from your assumptions, and invite correction. This way the user corrects the design, not isolated facts.
 - **Name contradictions** and ask again (e.g. "absolute beginners" + "90 minutes" + "deploy a web app" can't all hold — which gives?).
 - Keep going until the **readiness gate** for the use case (in `references/question-bank.md`) passes.
-- **Mid-work checkpoints:** after each major deliverable (personas, objectives, outline, first exercise), ask one or two MCQs to confirm direction before continuing.
+- **Approval gate:** once the gate passes, present the plan in a few sentences, then stop and wait for an explicit yes before producing the main deliverable. Approving an earlier answer doesn't approve the plan.
+- **Mid-work checkpoints:** after each major deliverable (personas, objectives, outline, first exercise), ask one question to confirm direction before continuing.
 - **Exit hatch:** if the user says "just go", "use your judgment", or similar, adopt all pending recommendations, list them under **Assumptions** at the top of the deliverable, and proceed. Never stall.
+- **Tutoring is different:** questions to a *learner* (use case 4) are formative checks, not alignment questions. They are also asked one at a time, but with options in random order rather than recommended-first.
 
 ## Identify the use case
 

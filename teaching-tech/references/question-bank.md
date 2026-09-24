@@ -1,6 +1,6 @@
 # Question bank: alignment MCQs and readiness gates
 
-How to use: for the active use case, ask only the questions the conversation and material haven't settled, in the order given (dependency order). Replace the generic options with ones derived from the user's material. The first option is the default recommendation; adapt it when the context points elsewhere, and always explain why. Every option should lead to a visibly different output.
+How to use: for the active use case, ask only the questions the conversation and material haven't settled, in the order given (dependency order), one question per message. Replace the generic options with ones derived from the user's material. The first option is the default recommendation; adapt it when the context points elsewhere, and always explain why. Every option should lead to a visibly different output.
 
 Each use case ends with a **readiness gate**: don't produce the main deliverable until every item is settled (by answer or by recorded assumption).
 
