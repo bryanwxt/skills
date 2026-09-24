@@ -21,3 +21,28 @@ skill-name/
 | [data-intensive](data-intensive/) | Designs, reviews, and debugs data-intensive systems using Martin Kleppmann's *Designing Data-Intensive Applications* — choosing databases and formats, replication, sharding, transactions and race conditions, distributed failures and consensus, batch/stream pipelines and CDC, incident diagnosis, and system-design interview practice. |
 | [teaching-tech](teaching-tech/) | Designs, reviews, and delivers technical teaching using Greg Wilson's *Teaching Tech Together* (CC BY 4.0) — backward lesson design, personas, diagnostic MCQs, faded examples, live coding, workshops, online courses, tutoring, onboarding, inclusivity, and community building. Aligns intent by asking MCQs with recommended options. |
 | [pragmatic-programmer](pragmatic-programmer/) | Reviews, debugs, tests, builds/refactors, designs, estimates, and coaches using Hunt & Thomas's *The Pragmatic Programmer* — routes to one of 8 modes, cites all 70 tips and 11 checklists, returns ranked findings with options and patches, and translates 1999-era tooling to modern equivalents. |
+
+## References (third-party)
+
+Not my skills — included as read-only references via git submodule.
+
+| Reference | License | What it is |
+|---|---|---|
+| [obra/superpowers](https://github.com/obra/superpowers) → [`vendor/superpowers`](vendor/superpowers) | MIT © Jesse Vincent | An agentic skills framework for Claude Code: brainstorming, planning, TDD, systematic debugging, code review, subagent-driven development, and more. |
+
+Clone with submodules:
+
+```bash
+git clone --recurse-submodules https://github.com/bryanwxt/skills.git
+# or, in an existing clone:
+git submodule update --init
+```
+
+Update the reference to its latest version:
+
+```bash
+git submodule update --remote vendor/superpowers && git commit -am "Update superpowers reference"
+```
+
+To *use* superpowers in Claude Code, install it as a plugin from [obra/superpowers-marketplace](https://github.com/obra/superpowers-marketplace) rather than from this folder.
+
