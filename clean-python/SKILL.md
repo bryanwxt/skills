@@ -12,7 +12,6 @@ It never runs its own question round, design document, plan, or approval gate. I
 **Lanes with other skills:**
 - **`software-design`** decides how the system is split into modules and what each one hides. **clean-python** decides how each module is written in Python: protocols, dataclasses, typing, errors, iteration, and tests.
 - **`data-intensive`** decides stores, guarantees, and dataflow. clean-python writes the Python that enforces them, for example the transaction retry loop, session handling, and idempotency-key checks.
-- **`pragmatic-programmer`** runs only when the user asks for it.
 
 ## The lens in one paragraph
 
