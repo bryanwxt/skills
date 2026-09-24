@@ -16,6 +16,19 @@
 | Architecture audit of an existing app | — | ✅ owns, then hands each fix to brainstorming |
 | Writing production code | ✅ | never |
 
+## With clean-python
+
+For Python projects, install [`clean-python`](../clean-python/) too. The two split the work:
+
+| Question | Skill |
+|---|---|
+| How should the system be split into modules, and what should each hide? | software-design |
+| What should each module's interface be, and which errors should it define away? | software-design |
+| How is that interface expressed in Python (Protocol vs ABC, dataclasses, type hints, docstrings)? | clean-python |
+| Is the code Pythonic, typed, and error-safe? How is it tested with pytest? Which tools must pass? | clean-python |
+
+In a brainstorming spec, software-design adds the module cards and clean-python adds the "Python implementation notes" section. In the plan, software-design orders tasks interface-first and clean-python supplies exact file paths and verification commands. In review, both lenses go into the reviewer's requirements.
+
 ## How it plays out
 
 **"Build a notification service."** Brainstorming classifies it as architectural and asks its questions one at a time. The lens adds a couple (where will this change? what should callers never need to know?). When brainstorming proposes 2–3 approaches, they differ in how the system is split up and what each part hides, and the lens compares them. The design sections get a card per module: abstraction, what it hides, interface, errors, defaults. The spec self-review includes a red-flag pass. Then `writing-plans` puts interface-definition tasks first, and implementation follows test-first against those interfaces.

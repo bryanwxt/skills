@@ -9,6 +9,12 @@ This skill adds a design lens to superpowers. **Superpowers owns the process** â
 
 It never runs its own design process, never produces a design document separate from the superpowers spec, and never writes production code. So it's safe to use at any point, including while brainstorming's approval gate is still closed.
 
+**Lanes with other skills:**
+- **`software-design`** decides how the system is split into modules, what each one hides, and what its interface looks like.
+- **`clean-python`** decides how each module is written in Python: protocols, dataclasses, typing, errors, pytest, and tooling. For Python work, use both. This skill's module cards say *what* the interface is; clean-python says how it's expressed (for example, a `typing.Protocol` with typed signatures and docstrings).
+- **`data-intensive`** owns storage, concurrency, and data-system choices.
+- **`pragmatic-programmer`** runs only when the user asks for it.
+
 ## The lens in one paragraph
 
 The goal of design is to reduce **complexity** â€” whatever makes a system hard to understand or change. It shows up as **change amplification** (a simple change touches many places), **cognitive load** (a lot to hold in your head), and **unknown unknowns** (it's unclear what to change or know), and comes from **dependencies** and **obscurity**. The main tools: **deep modules** (lots of functionality behind a simple interface), **information hiding** (each design decision lives in one module), **different abstractions per layer**, **pulling complexity down** into the module rather than onto its callers, **defining errors out of existence**, and **designing it twice**. Every finding must name the symptom it causes; if it causes none, it's style, not design.
