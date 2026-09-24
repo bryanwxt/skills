@@ -1,4 +1,4 @@
-# Python review lens (paste into the reviewer's requirements)
+# Python review lens (append to `PLAN_OR_REQUIREMENTS` for the final whole-branch review or a standalone requesting-code-review; never to per-task reviews)
 
 Also review the Python-specific quality of the change, based on *Clean Code in Python*. Skip anything the project's formatter, linter, or type checker would catch; if a whole class of issue should be automated, say so once instead of listing instances. For each finding give file:line, the problem, why it matters, and a short fix.
 

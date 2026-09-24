@@ -10,7 +10,11 @@ Rules shared with the other lenses (questions, spec outline, plan order, tests, 
   - `@dataclass(frozen=True)` inside, with validation (e.g. pydantic) at the edges;
   - `mypy --strict` for new modules.
 - **Approaches:** add one line per approach on how naturally it maps to Python. Prefer protocols, dataclasses, and generators over class frameworks. Dependencies should be injected, and the design testable without heavy patching.
-- **Spec** (Implementation notes and Components, via `assets/spec-sections.md`): package layout and `__all__`, extension points, value objects, the exception hierarchy (one package base, translated at the boundaries), injection points, concurrency, typing level, required checks.
+- **Spec** (`assets/spec-sections.md`, placed under brainstorming's headings):
+  - Components: extension points, value objects;
+  - Error handling: the exception hierarchy (one package base, translated at the boundaries);
+  - Testing: the approach;
+  - Implementation notes: runtime and required checks, typing level, package layout and `__all__`, injection points, concurrency.
 - **Self-review:** can each component be tested without its real dependencies? Is each exception defined in one place? Are frameworks kept at the edges? Is any inheritance there only for reuse?
 
 ## brainstorming (bounded / spike)
@@ -18,10 +22,20 @@ Rules shared with the other lenses (questions, spec outline, plan order, tests, 
 - **Spike:** don't polish throwaway code. Report Python findings that affect the real design, e.g. "the library is sync-only".
 
 ## writing-plans
+Fill writing-plans' slots as `coordination.md` (Plan) describes:
 - Give exact `src/…` and `tests/…` paths.
-- If tooling is missing, the first task adds formatter, linter, type checker, and pytest config, wired into CI.
+- **Global Constraints:** Python version, typing level, and the exact check commands.
+- **Missing tooling:** the first task that needs the checks adds the formatter, linter, type checker and pytest config, wired into CI, in its opening steps. Never make it a standalone task.
 - Every task ends with commands and their expected results: `pytest …`, `ruff check …`, `mypy …`, and the formatter check.
-- Interface tasks produce typed signatures with docstrings.
+- `Interfaces: Produces` gives typed signatures, each with its docstring summary.
+- Each task body lists the Python rules that apply to it (at most 5):
+  - types and docstrings on public functions;
+  - no mutable defaults, bare `except`, or `assert` used for validation;
+  - `raise … from e`;
+  - `with` for resources;
+  - inject dependencies;
+  - composition rather than inheritance for reuse;
+  - no blocking I/O in `async def`.
 - Big modules become packages that re-export the old names.
 
 ## test-driven-development
@@ -34,16 +48,7 @@ Rules shared with the other lenses (questions, spec outline, plan order, tests, 
 - **Green / refactor:** write the simplest Pythonic code, then apply idioms: comprehensions, `enumerate`/`zip`, `with`, dataclasses, `@property`. Rerun the tests and tools.
 
 ## execution (subagent-driven / executing-plans)
-Add at most 5 rules to each task brief, picking the ones that apply:
-- types and docstrings on public functions;
-- no mutable defaults, bare `except`, or `assert` used for validation;
-- `raise … from e`;
-- `with` for resources;
-- inject dependencies;
-- composition rather than inheritance for reuse;
-- no blocking I/O in `async def`.
-
-Report done only with the tool output attached. If the planned interface forces un-Pythonic code, raise it rather than working around it.
+The Python rules reach the implementer through the plan task. Add nothing to the dispatch (`coordination.md`, Execution and review). Report done only with the tool output attached. If the planned interface forces un-Pythonic code, raise it rather than working around it.
 
 ## verification-before-completion
 "Verified" means showing the output of:
@@ -55,7 +60,7 @@ Report done only with the tool output attached. If the planned interface forces 
 If a tool isn't configured, say so.
 
 ## requesting- / receiving-code-review
-- **Requesting:** only when Python files change, append `review-lens.md` and the spec's Python notes.
+- **Requesting:** per-task reviews get Python rules only through Global Constraints. For the final whole-branch review or a standalone requesting-code-review, and only when Python files change, append `review-lens.md` and the spec's Python notes to `PLAN_OR_REQUIREMENTS`.
   - Critical: correctness hazards.
   - Important: idiom or design problems in shared code.
   - Minor: local issues.

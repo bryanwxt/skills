@@ -1,4 +1,4 @@
-# Data review lens (paste into the reviewer's requirements only when the diff touches data)
+# Data review lens (append to `PLAN_OR_REQUIREMENTS` for the final whole-branch review or a standalone requesting-code-review, only when the diff touches data; never to per-task reviews)
 
 Also review the change for data correctness, based on *Designing Data-Intensive Applications*. For each finding give file:line, the concrete event sequence that goes wrong (two requests, a crash, a retry, a failover), how likely it is, and the fix.
 

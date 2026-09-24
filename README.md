@@ -28,8 +28,8 @@ skill-name/
 
 - one question budget and order for brainstorming;
 - which lens sets the axis for comparing approaches;
-- a merged spec outline;
-- one plan order;
+- a merged spec outline under brainstorming's own headings;
+- where lens content goes in the plan (Global Constraints, Review Focus, each task), and one dependency order;
 - the test-double rule (real database for correctness tests, fakes for external services);
 - one combined check for small changes;
 - joint reviews.

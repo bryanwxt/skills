@@ -38,10 +38,11 @@ Rules shared with the other lenses (questions, spec outline, plan order, tests, 
 - **Spike:** don't apply the lens to throwaway code. Mention any design implication in the recommendation.
 
 ## writing-plans
+Fill writing-plans' slots as `coordination.md` (Plan) describes:
 - Build in increments of abstractions, not features.
-- A new module's first task defines its interface and interface comments.
-- Refactors go in their own green tasks.
-- Name what each task's module hides.
+- The task that first produces a module puts its signatures and interface comments in `Interfaces: Produces`, and its module card (abstraction, what it hides, errors) in the task body.
+- Global Constraints: one line per knowledge-hiding rule that spans tasks ("only `X` knows `Y`").
+- Behaviour-preserving refactors are green before behaviour changes. A refactor is its own task only if a reviewer could reject it on its own.
 - A task that edits many modules for one change points to leakage; send it back to the spec.
 
 ## test-driven-development
@@ -49,11 +50,11 @@ Rules shared with the other lenses (questions, spec outline, plan order, tests, 
 - Heavy setup or many mocks is a design signal: note it for review.
 
 ## execution (subagent-driven / executing-plans)
-- Put the relevant module card in the task brief.
+- The module card reaches the implementer through the plan task. Add nothing to the dispatch (`coordination.md`, Execution and review).
 - An implementer who finds an interface problem raises it, never silently redesigns. Local fixes inside the module are fine.
 
 ## requesting- / receiving-code-review
-- **Requesting:** only when module boundaries or interfaces change, append `review-lens.md` and the touched module cards to `PLAN_OR_REQUIREMENTS`.
+- **Requesting:** per-task reviews get design rules only through Global Constraints. For the final whole-branch review or a standalone requesting-code-review, and only when module boundaries or interfaces change, append `review-lens.md` and the touched module cards to `PLAN_OR_REQUIREMENTS`.
   - Important: red flags that spread change amplification in shared modules.
   - Minor: local issues.
 - **Receiving:**

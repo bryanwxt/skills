@@ -32,11 +32,11 @@ Otherwise stay silent.
 
 After the change, end with this exact line (the lens check), shared by all three lenses:
 `Lens check: design <ok|note> · python <ok|note> · data <ok|note>`
-Drop python if no .py file changed and data if no data changed; write "ok" only if that lens flags nothing. Add no questions of your own: state lens decisions as defaults under **Defaults chosen**.
+Build it from installed lenses only, as `coordination.md` shows (e.g. only clean-python installed → `Lens check: python ok`); drop python if no .py file changed and data if no data changed; write "ok" only if that lens flags nothing. Add no questions of your own: state lens decisions as defaults under **Defaults chosen**.
 
 ## Inside superpowers steps
 
-Read `references/coordination.md` once per session; it's shared by all three lenses. Then read the section of `references/superpowers-hooks.md` for the current step. **Designing a data architecture from scratch** is brainstorming's architectural path plus the data track in the hooks file; stop after the approved spec if the user wants only the design. For spec content, use `assets/spec-sections.md`. For the reviewer, use `references/review-lens.md`.
+Read `references/coordination.md` once per session; it's shared by all three lenses. Then read the section of `references/superpowers-hooks.md` for the current step. **Designing a data architecture from scratch** is brainstorming's architectural path plus the data track in the hooks file; stop after the approved spec if the user wants only the design. For spec content, use `assets/spec-sections.md`. For the final whole-branch or a standalone reviewer, use `references/review-lens.md` (per-task reviewers get lens rules only through the plan's Global Constraints).
 
 ## Flow A: technology choice
 Use this for "Postgres or DynamoDB?", "Kafka or SQS?", "Avro or Protobuf?", and similar. Announce the path first:

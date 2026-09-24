@@ -19,7 +19,12 @@ Rules shared with the other lenses (questions, spec outline, plan order, tests, 
   - where correctness is enforced.
 
   Compare them on guarantees met, headroom against growth, failure behaviour, operational burden, and cost of change. Say plainly when one database is enough.
-- **Spec:** add the sections from `assets/spec-sections.md`: load and targets, guarantees → mechanisms, systems of record, data model, replication and partitioning, correctness mechanisms, evolution, failure analysis (merged into the error table), operations, product facts.
+- **Spec** (`assets/spec-sections.md`, placed under brainstorming's headings):
+  - Architecture: load and targets, guarantees → mechanisms, systems of record;
+  - Data flow: the diagram, data model, replication and partitioning, correctness mechanisms, encoding and evolution;
+  - Error handling: failure-analysis rows in the shared error table;
+  - Testing: tests against the real engine;
+  - Implementation notes: operations, product facts.
 - **Self-review:**
   - one source of truth per entity;
   - every guarantee is named, along with its mechanism;
@@ -37,10 +42,14 @@ Rules shared with the other lenses (questions, spec outline, plan order, tests, 
 - **Spike:** state the metric and the pass/fail threshold before running it.
 
 ## writing-plans
+Fill writing-plans' slots as `coordination.md` (Plan) describes:
+- **Global Constraints:** each guarantee and its mechanism, the isolation level (read from config), the idempotency keys, "publish only via the outbox", expand-only schema changes.
+- **Review Focus:** race, duplicate, retry and failover conditions as concrete lines, e.g. "the same webhook delivered twice → one charge". Put the pinning test in the task that owns the code.
+- **Each task** names the guarantee it preserves and the test that proves it.
 - Schema change as expand → migrate → contract, one independently deployable task per step. Note any DDL that locks or rewrites a table.
 - Backfills are resumable and throttled, and end with a verification query.
-- Outbox or CDC comes before any task that publishes events.
-- Constraints, unique indexes, and idempotency tables come before the code that relies on them.
+- The outbox or CDC lands in or before the first task that publishes events.
+- Constraints, unique indexes, and idempotency tables land in or before the first task that relies on them.
 - Verification includes migrate up and down on a copy, plus the race and idempotency tests.
 
 ## test-driven-development
@@ -53,7 +62,7 @@ Add failing-first tests where relevant, run against the real engine:
 - **Property tests** for invariants.
 
 ## execution (subagent-driven / executing-plans)
-- The brief states the guarantee to preserve and its mechanism, the assumed isolation level, the idempotency key, and "publish via the outbox".
+- The guarantee, isolation level, idempotency key, and outbox rule reach the implementer through Global Constraints and the plan task. Add nothing to the dispatch (`coordination.md`, Execution and review).
 - If the planned approach can't provide the guarantee, raise it; don't work around it.
 
 ## verification-before-completion
@@ -78,7 +87,7 @@ Add failing-first tests where relevant, run against the real engine:
   Architectural causes become a flow-B review or a brainstorming request. End with the lens-check line from coordination.md.
 
 ## requesting- / receiving-code-review
-- **Requesting:** only when the diff touches schemas, migrations, transactions, queues, caches, or concurrency, append `review-lens.md` and the spec's guarantees.
+- **Requesting:** per-task reviews get data rules only through Global Constraints; the Review Focus lines are pinned by tests. For the final whole-branch review or a standalone requesting-code-review, and only when the diff touches schemas, migrations, transactions, queues, caches, or concurrency, append `review-lens.md` and the spec's guarantees to `PLAN_OR_REQUIREMENTS`.
   - Critical: loss, corruption, broken invariants.
   - Important: races or duplicates under load or failure.
   - Minor: everything else.
