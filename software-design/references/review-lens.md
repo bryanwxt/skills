@@ -1,4 +1,4 @@
-# Design review lens (paste into the reviewer's requirements)
+# Design review lens (append to `PLAN_OR_REQUIREMENTS` for the final whole-branch review or a standalone requesting-code-review; never to per-task reviews)
 
 Also review module and interface design, based on *A Philosophy of Software Design*. Report a design issue only if it causes change amplification, cognitive load, or unknown unknowns — otherwise it's style. For each, give file:line, the red flag, the consequence, and a concrete fix.
 
