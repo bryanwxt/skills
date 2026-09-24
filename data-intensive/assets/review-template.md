@@ -2,12 +2,12 @@
 
 **Path:** targeted / full · **Date:** <date> · **Saved at:** `docs/superpowers/reviews/YYYY-MM-DD-<topic>-data-review.md`
 
-## Understanding (written back and confirmed)
+## Understanding (written back)
 - **Trigger:** <…>
 - **Flows in scope:** <…>
 - **Guarantees the business assumes:** <named precisely>
 - **What can change:** <…>
-- **Stated by user:** <only what the user actually said> · **Assumed (defaults accepted or inferred):** <…>
+- **Stated:** <only what the user said> · **Decided:** <approved recommendations> · **Assumed (default accepted):** <only for questions asked> · **Assumed (inferred, not asked):** <…>
 
 ## System map
 ```mermaid
@@ -50,6 +50,7 @@ Each fix the user wants becomes its own `superpowers:brainstorming` request. Sug
 ## Self-review
 Tick only what you actually verified. Anything unticked must appear under "Not verified".
 
+- [ ] Findings sorted Critical → Minor
 - [ ] Every finding has evidence and an event sequence
 - [ ] Guarantees named precisely
 - [ ] Product facts fetched and dated (or listed under Not verified)

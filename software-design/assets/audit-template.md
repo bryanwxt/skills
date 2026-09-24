@@ -3,11 +3,11 @@
 **Path:** targeted / full · **Date:** <date> · **Saved at:** `docs/superpowers/reviews/YYYY-MM-DD-<topic>-design-review.md`
 **Scope:** <what was read, what was sampled, what wasn't read>
 
-## Understanding (written back and confirmed)
+## Understanding (written back)
 - **Prompt:** <…>
 - **Areas that matter most:** <…>
 - **What can change:** <…>
-- **Stated by user:** <only what the user actually said> · **Assumed (defaults accepted or inferred):** <…>
+- **Stated:** <only what the user said> · **Decided:** <approved recommendations> · **Assumed (default accepted):** <only for questions asked> · **Assumed (inferred, not asked):** <…>
 
 ## Summary
 <3–5 sentences: overall health, the biggest source of complexity, and the single highest-leverage change.>
@@ -51,6 +51,7 @@ Each fix the user wants becomes its own `superpowers:brainstorming` request, the
 ## Self-review
 Tick only what you actually verified. Anything unticked must appear under "Not verified".
 
+- [ ] Findings sorted Critical → Minor
 - [ ] Every finding cites code actually read
 - [ ] No placeholders, contradictions, or ambiguity
 - [ ] Unverified areas listed

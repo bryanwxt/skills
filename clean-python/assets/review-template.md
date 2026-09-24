@@ -2,11 +2,11 @@
 
 **Path:** quick / full · **Date:** <date> · **Saved at:** `docs/superpowers/reviews/YYYY-MM-DD-<topic>-python-review.md`
 
-## Understanding (written back and confirmed)
+## Understanding (written back)
 - **Prompt:** <…>
 - **Areas that matter most:** <…>
 - **Constraints:** <Python version, frameworks, API stability>
-- **Stated by user:** <only what the user actually said> · **Assumed (defaults accepted or inferred):** <…>
+- **Stated:** <only what the user said> · **Decided:** <approved recommendations> · **Assumed (default accepted):** <only for questions asked> · **Assumed (inferred, not asked):** <…>
 
 ## Tooling status
 Missing tooling that hides real defects is an Important finding, not Minor.
@@ -47,6 +47,7 @@ Each fix the user wants becomes its own `superpowers:brainstorming` request, the
 ## Self-review
 Tick only what you actually verified. Anything unticked must appear under "Not verified".
 
+- [ ] Findings sorted Critical → Minor
 - [ ] Every finding cites code actually read
 - [ ] Tool claims backed by output
 - [ ] No placeholders, contradictions, or ambiguity

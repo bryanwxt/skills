@@ -3,12 +3,12 @@
 **Path:** decision / spike-then-decision · **Status:** proposed / accepted / superseded by <link> · **Date:** <date>
 **Saved at:** `docs/superpowers/decisions/YYYY-MM-DD-<topic>.md`
 
-## Understanding (written back and confirmed)
+## Understanding (written back)
 - **Outcome wanted:** <…>
 - **Workload:** <load parameters and access patterns>
 - **Non-negotiable guarantees:** <named precisely>
 - **Constraints:** <operational model, existing stack, budget, team>
-- **Stated by user:** <only what the user actually said> · **Assumed (defaults accepted or inferred):** <…>
+- **Stated:** <only what the user said> · **Decided:** <approved recommendations> · **Assumed (default accepted):** <only for questions asked> · **Assumed (inferred, not asked):** <…>
 
 ## Options
 | Option | Fits the workload because | Fails or strains because | Failure behaviour (leader loss, partition, retry) | Operational cost | Exit cost |

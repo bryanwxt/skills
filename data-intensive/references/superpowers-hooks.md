@@ -61,7 +61,7 @@ Add failing-first tests where relevant, run against the real engine:
 - Don't claim "safe under concurrency" without a race test, or "no data loss" without a failure test.
 
 ## systematic-debugging
-- **Phase 1:** state suspects from `review-checklist.md` Part 2 before investigating:
+- **Phase 1:** name at least 2 suspects from `review-checklist.md` Part 2, with one line each on why it's ruled in or out, before reading further:
   - stale read → replication lag;
   - lost update → read-modify-write race;
   - duplicates → a retry without idempotency;
@@ -75,7 +75,7 @@ Add failing-first tests where relevant, run against the real engine:
   - name any remaining duplicate sources of truth (e.g. a counter vs a row count) as follow-ups;
   - don't fold "not found" into a domain error.
 
-  Architectural causes become a flow-B review or a brainstorming request.
+  Architectural causes become a flow-B review or a brainstorming request. End with the lens-check line from coordination.md.
 
 ## requesting- / receiving-code-review
 - **Requesting:** only when the diff touches schemas, migrations, transactions, queues, caches, or concurrency, append `review-lens.md` and the spec's guarantees.

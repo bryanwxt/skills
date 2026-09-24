@@ -7,8 +7,13 @@ These rules apply whenever software-design, clean-python or data-intensive is ac
 - Lens questions join brainstorming's queue: one per message, **at most 6 across all lenses**. Ask only when the answer changes the design; anything else becomes an assumption in the write-back. Skip whatever the context already answers.
 - **Choice** (approach, guarantee to pay for, path): put the recommended option first, with its reason.
 - **Fact** about the user's world (load, traffic shape, domain rules, team, existing systems, what prompted the request): give ranges plus "Not sure — assume <smallest reasonable>". Never mark an option "recommended" or "default".
-  - An accepted default goes under **Assumed (default accepted)**, never under "Stated".
-  - If a conclusion rests on an assumed fact, say so.
+- Record every input under one of four labels:
+  - **Stated:** the user said it.
+  - **Decided:** an approved recommendation on a choice.
+  - **Assumed (default accepted):** only for questions actually asked.
+  - **Assumed (inferred, not asked).**
+
+  If a conclusion rests on an assumption, say so.
 - Order, with duplicates merged:
   1. workload and loss tolerance (data);
   2. guarantees, including the delivery semantics of any side effect the feature relies on (data);
@@ -47,7 +52,7 @@ Self-review runs every active lens's checks in one pass.
 7. migrate and backfill, then switch readers;
 8. contract the old schema.
 
-Every task ends with its verification commands. If planning changes the approved spec, list the changes and ask before committing them.
+The interfaces task (types, Protocols, stubs) comes before any schema or migration task. Every task ends with its verification commands. List every deviation from the approved spec (including test strategy) under **Deviations**, and ask before committing it.
 
 **Tests**
 - Data-correctness tests (races, constraints, isolation, idempotency, migrations) run against the real database engine, never a mock.
@@ -56,9 +61,10 @@ Every task ends with its verification commands. If planning changes the approved
 - Show the failing run's output before the fix and the passing run's output after it. A summary is not evidence.
 
 **Bounded and trivial changes**
-- Open decisions become defaults in the short design. Scope extras (read methods, return types, helper APIs) are defaults, not questions. Ask only when no safe default exists.
-- One approval, then implement.
-- Include exactly one line: `Lens check: design … · python … · data …`. Write "ok" for a lens with nothing to flag. Include python when Python changes, and data only when data changes.
+- **Ask no questions.** Resolve each open decision with the smallest safe default, including scope extras, and list it under **Defaults chosen** in the short design. Then ask for one approval and implement.
+- After every code change, including debugging fixes, write this line exactly: `Lens check: design <ok|note> · python <ok|note> · data <ok|note>`.
+  - Include python whenever a .py file changes, and data only when data changes.
+  - Write "ok" only if that lens flags nothing.
 - Pre-existing problems go under follow-ups.
 - Don't open lens reference files; each SKILL.md has a quick rule for this.
 
@@ -69,7 +75,8 @@ Every task ends with its verification commands. If planning changes the approved
   - data flows, stores or an incident → data-intensive review;
   - technology choice → data-intensive decision;
   - anything spanning lenses → **one** joint review.
-- **Flow:** announce the path → questions (budget, choice vs fact) → write back what you understood, separating stated from assumed → write the document directly (no section-by-section or finding-by-finding approvals; only a short summary in chat) → self-review → one review gate → hand off to `superpowers:brainstorming`. Never implement in the flow.
+- **Joint reviews:** load each covered lens with the Skill tool, and use the union of their templates' self-review items.
+- **Flow:** announce the path → questions (budget, choice vs fact) → post the write-back **in chat** with the four labels, in the same message that says the document is being written → write the document directly (no section-by-section or finding-by-finding approvals; only a short summary in chat) → self-review → one review gate → hand off to `superpowers:brainstorming`. Never implement in the flow.
 - **Location:** `docs/superpowers/{reviews,decisions}/YYYY-MM-DD-<topic>…md`. Commit on a branch.
 - **Findings:** sorted by severity (Critical / Important / Minor) and tagged `[data]`, `[design]` or `[python]`. Assign them by concern:
   - schema, constraints, invariants → data;
@@ -77,7 +84,7 @@ Every task ends with its verification commands. If planning changes the approved
   - idioms, typing, tooling → python.
 
   Missing tooling that hides defects is Important. Data findings, including side effects in the write path, are written as event sequences.
-- **Self-review:** never tick something you haven't verified. Fetch and date product facts, or list them under "Not verified".
+- **Self-review:** check that findings are sorted Critical → Minor, and never tick something you haven't verified. Fetch and date product facts, or list them under "Not verified".
 - Load templates only when writing the document.
 
 **Task briefs and review**
