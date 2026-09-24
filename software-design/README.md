@@ -57,6 +57,7 @@ In a brainstorming spec, software-design adds the module cards and clean-python 
 | File | Used when |
 |---|---|
 | `SKILL.md` | Always: role, hook table, audit procedure |
+| `references/coordination.md` | Shared rules for all three lenses (questions, spec outline, plan order, tests, bounded changes, reviews); read once per session |
 | `references/superpowers-hooks.md` | Step-by-step additions for each superpowers skill |
 | `references/principles.md` | The design principles, condensed |
 | `references/red-flags.md` | Red flags, how to detect them in code, how to fix them |

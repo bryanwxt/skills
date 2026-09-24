@@ -24,7 +24,7 @@ skill-name/
 
 ## Using the superpowers lenses together
 
-`software-design`, `clean-python` and `data-intensive` are lenses for [superpowers](https://github.com/obra/superpowers). Superpowers runs the process; each lens supplies judgment in its own lane (module design / Python / data systems). When several are active at once, a shared **coordination section** in each lens's `references/superpowers-hooks.md` sets:
+`software-design`, `clean-python` and `data-intensive` are lenses for [superpowers](https://github.com/obra/superpowers). Superpowers runs the process; each lens supplies judgment in its own lane (module design / Python / data systems). When several are active at once, a shared **`references/coordination.md`** (identical in each lens; read once per session) sets:
 
 - one question budget and order for brainstorming;
 - which lens sets the axis for comparing approaches;

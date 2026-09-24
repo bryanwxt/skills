@@ -44,6 +44,7 @@
 | File | Used when |
 |---|---|
 | `SKILL.md` | Always: role, lanes, hook table, the standalone-review procedure |
+| `references/coordination.md` | Shared rules for all three lenses (questions, spec outline, plan order, tests, bounded changes, reviews); read once per session |
 | `references/superpowers-hooks.md` | Step-by-step additions for each superpowers skill |
 | `references/pythonic.md` | Writing or reviewing Python idioms |
 | `references/design.md` | Contracts, errors, SOLID, patterns in Python |

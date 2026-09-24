@@ -1,108 +1,68 @@
 ---
 name: clean-python
-description: Python lens for superpowers workflows, based on Mariano Anaya's "Clean Code in Python" — Pythonic idioms and protocols, typing, error handling, SOLID in Python, decorators, descriptors, generators and async, pytest, mocks, and tooling (formatter, linter, type checker). Use whenever superpowers work touches Python code — brainstorming a Python design, writing-plans for a Python project, test-driven-development with pytest, executing plan tasks in Python, verification before completion, systematic-debugging of Python bugs, and requesting or receiving code review of Python — and when asked to review or judge Python code that isn't a commit range. Never runs its own process.
+description: Python lens for superpowers workflows, based on Mariano Anaya's "Clean Code in Python": Pythonic idioms and protocols, typing, error handling, SOLID in Python, decorators, descriptors, generators and async, pytest, mocks, and tooling (formatter, linter, type checker). Use it whenever superpowers work touches Python code, in brainstorming, writing-plans, test-driven-development with pytest, plan execution, verification, systematic-debugging, and code review. Also use it when asked to review or judge Python code outside a commit range. It never runs its own process.
 ---
 
 # Clean Python (superpowers lens)
 
-This skill adds a Python lens to superpowers. **Superpowers owns the process**: the order of steps, one question per message, approval gates, where specs and plans live, test-first, review, and verification. **This skill owns the Python judgment**: which idioms, types, tests, tools, and error handling make Python code clean, and what to look for when it isn't.
+Superpowers owns the process. This lens owns the Python judgment: idioms, types, errors, tests, and tools. It writes Python only inside a superpowers implementation step.
 
-It never runs its own question round, design document, plan, or approval gate. It writes Python only inside a superpowers implementation step (a TDD cycle or a plan task).
+**Lanes**
+- **software-design:** module split and interfaces.
+- **clean-python:** how each module is written in Python, e.g. a `typing.Protocol`, dataclasses, typed signatures, docstrings, an exception hierarchy.
+- **data-intensive:** stores, guarantees, and dataflow. This lens writes the Python that enforces them: transaction retry loops, session handling, idempotency checks.
 
-**Lanes with other skills:**
-- **`software-design`** decides how the system is split into modules and what each one hides. **clean-python** decides how each module is written in Python: protocols, dataclasses, typing, errors, iteration, and tests.
-- **`data-intensive`** decides stores, guarantees, and dataflow. clean-python writes the Python that enforces them, for example the transaction retry loop, session handling, and idempotency-key checks.
-
-## The lens in one paragraph
-
-Clean Python reads well and changes safely. Formatting and style are left to tools (formatter, linter, type checker in CI). Human attention goes to intent:
-- Use the language's protocols (iteration, context managers, properties, dataclasses) rather than hand-rolled equivalents.
+**The lens**
+- Leave style to tools: formatter, linter, and type checker, run in CI.
+- Use the language's protocols (iteration, context managers, properties, dataclasses) instead of hand-rolling them.
 - Keep functions small and at one level of abstraction.
-- Type-annotate public interfaces.
-- Raise specific exceptions at the right level and never swallow them.
-- Inject dependencies instead of creating them inside.
-- Prefer composition to inheritance for code reuse.
+- Type public interfaces.
+- Raise specific exceptions, at the right level, chained with `from e`, and never swallowed.
+- Inject dependencies.
+- Prefer composition to inheritance when the goal is reuse.
 - Test the public interface with pytest.
-- Every principle is a guideline: practicality beats purity.
+- Practicality beats purity.
 
-Reference files:
-- `references/superpowers-hooks.md`: exactly what to do at each superpowers step. **Read it whenever this skill is active.**
-- `references/pythonic.md`: idioms, protocols, decorators, descriptors, generators, async, gotchas.
-- `references/design.md`: contracts, errors, cohesion and coupling, SOLID in Python, patterns, architecture (the Python side; module decomposition is `software-design`'s job).
-- `references/testing.md`: pytest, fixtures, mocks, coverage, property-based and mutation testing, refactoring safely.
-- `references/review-checklist.md`: the full Python smell checklist with fixes.
-- `references/review-lens.md`: a short checklist to paste into the superpowers code reviewer's prompt.
-- `assets/pyproject-tooling.toml`: starter config for black, ruff, mypy, pytest, and coverage.
-- `assets/spec-sections.md`: Python sections to add to a brainstorming spec.
-- `assets/review-template.md`: output format for a full Python review.
-- `README.md`: the human-facing guide to using this skill with superpowers.
+## Quick rule: bounded and trivial changes
 
-## Quick rule for small and trivial changes
-
-For a bounded or trivial Python change, don't open the reference files. Always add the `python …` part of the one-line lens check (`Lens check: design … · python … · data …`). Flag:
-- a mutable default, bare `except`, or flag parameter;
+Don't open the reference files. Always write the `python …` part of the one-line lens check. Flag:
+- a mutable default;
+- a bare `except`;
+- a flag parameter;
 - a dependency created inside a function;
 - an undeclared new dependency;
-- a missing type hint or docstring on a new public function.
+- a new public function without a type hint or docstring.
 
-Use the project's tools for verification and show their output. List pre-existing problems as follow-ups.
+Verify with the project's own tools and show their output. Put pre-existing problems under follow-ups.
 
-## Where it plugs in
+## Inside superpowers steps
 
-| Superpowers step | What this skill adds | Details |
-|---|---|---|
-| `brainstorming`: explore context | Python version, packaging, tooling present, typing level, test setup, framework conventions | hooks §1 |
-| `brainstorming`: questions and approaches | Python-specific choices that change the design (sync vs async, Protocol vs ABC, dataclass vs model library, typing strictness), asked in brainstorming's format | hooks §1 |
-| `brainstorming`: design sections and spec | A "Python implementation notes" section: package layout, extension points, value objects, error hierarchy, dependency injection, typing | hooks §1, `assets/spec-sections.md` |
-| `brainstorming`: bounded path | A quick Python check of the change (mutable defaults, swallowed errors, a new flag argument, a new dependency) | hooks §2 |
-| `writing-plans` | Exact file paths per package layout; a tooling task if checks are missing; verification commands in every task | hooks §3 |
-| `test-driven-development` | pytest idioms: parametrize, fixtures, `pytest.raises`, Hypothesis; mocks only at boundaries with autospec, patched where looked up | hooks §4 |
-| `subagent-driven-development` / `executing-plans` | Pythonic implementation rules for each task; run the formatter, linter, and type checker before reporting done | hooks §5 |
-| `verification-before-completion` | The commands that count as evidence: `pytest`, `ruff check`, `mypy`, formatter check, with their output | hooks §6 |
-| `requesting-code-review` | `references/review-lens.md` pasted into the reviewer's requirements | hooks §7 |
-| `receiving-code-review` | Check Python feedback against the idioms before acting; push back on suggestions that make code less Pythonic | hooks §7 |
-| `systematic-debugging` | Python-specific hypotheses and tools (mutable defaults, late binding, iterator exhaustion, patch location, `breakpoint()`, `-X dev`, `tracemalloc`) | hooks §8 |
-| `finishing-a-development-branch` | All tool checks green; optional list of Python debt found | hooks §9 |
+Read `references/coordination.md` once per session; it's shared by all three lenses. Then read the section of `references/superpowers-hooks.md` for the current step. For spec content, use `assets/spec-sections.md`. For the reviewer, use `references/review-lens.md`. If tooling is missing, start from `assets/pyproject-tooling.toml`.
 
-## The one thing this skill starts: a Python code review outside a commit range
+## Python review (the one flow this skill starts)
 
-Superpowers' review only looks at a range of commits. When the user asks to review a Python file, package, or snippet, or asks "is this Pythonic?", this skill reviews it directly, using brainstorming's discipline. If the request also covers module structure or data flows, run one joint review instead, as described under "Standalone reviews" in the coordination section of `references/superpowers-hooks.md`.
+Use this for "is this Pythonic?" or "review this file or package" when there's no commit range. If the request also covers structure or data, run the joint review described in the coordination file.
+- **Quick path** (a snippet or short file): findings in chat, with before/after snippets. No document. Ask questions only if the intent is unclear.
+- **Full path** (a package, or when the fixes need planning): follow the coordination file's standalone flow, then:
+  1. Read for intent. Then walk `references/review-checklist.md` in this order: correctness hazards → design → idioms → docs and typing → tests → tooling. Style comes last, and only when no tool would catch it.
+  2. For each finding, give file:line, the problem, why it matters, a before/after snippet, and a severity:
+     - **Critical:** a bug, data loss, security, or a swallowed error.
+     - **Important:** a problem that will spread.
+     - **Minor:** a local issue.
 
-1. **Classify and announce the path**, so the user can override it:
-   - **Quick:** a snippet or a single short file. Give findings in chat with before/after snippets. No document and no question round unless the intent is unclear.
-   - **Full:** a package, module set, or anything where the fixes will need planning. Follow every step below.
-2. **Discover intent (full path).** Ask one question per message, multiple choice, recommended option first. Skip anything already answered. Cover:
-   - what prompted it (a general quality check / bugs keep appearing here / preparing a refactor / onboarding);
-   - which areas matter most;
-   - constraints (Python version, frameworks, whether the public API must stay stable).
-3. **Write back your understanding.** Separate what the user said from your assumptions.
-4. **Read for intent.** What is the code trying to do, and does its structure show that?
-5. **Walk `references/review-checklist.md`** in priority order: correctness hazards, then design, idioms, docs and typing, tests, and tooling. Style goes last, and only if no tool would catch it.
-6. **Rate each finding.** Findings are sorted by severity, each tagged with its lens when this is a joint review. Each finding gets:
-   - location (file:line);
-   - the problem and why it matters;
-   - a short before/after snippet;
-   - a severity in superpowers' terms: **Critical** (bug, data loss, security, swallowed errors), **Important** (design or idiom problems that will spread), **Minor** (local).
+     Keep the review in proportion to the code, and credit what's good.
+  3. Write it with `assets/review-template.md` to `docs/superpowers/reviews/YYYY-MM-DD-<topic>-python-review.md`, then self-review, review gate, hand-off.
 
-   Credit what's done well, and keep the review in proportion to the code.
-7. **Write the review directly (full path)**, with no section-by-section approvals and only a short summary in chat, with `assets/review-template.md` to `docs/superpowers/reviews/YYYY-MM-DD-<topic>-python-review.md`, and commit it.
-8. **Self-review.** Never tick an item you haven't verified. Any claim that a check passes or fails must come from running it and showing the output (`superpowers:verification-before-completion`). List unverified areas.
-9. **User review gate (full path).**
-10. **Hand off.** Fixes the user wants go through `superpowers:brainstorming`, then TDD. Don't rewrite the code inside the review.
+  Tool claims need tool output.
 
-## Rules
+**Guardrails**
+- Follow the project's own conventions and tools over this skill's defaults.
+- Don't spend review comments on what a tool catches; recommend the tool instead.
+- Refactors preserve behaviour, and go in their own green tasks.
 
-- Follow superpowers' conventions:
-  - one question per message, recommended option first;
-  - specs in `docs/superpowers/specs/`;
-  - plans via `writing-plans`;
-  - a failing test before implementation code.
-- Say when you're using the lens: "Using clean-python for the pytest structure."
-- Follow the project's existing conventions and tools over this skill's defaults. Suggest `assets/pyproject-tooling.toml` only when checks are missing.
-- Don't spend review comments on what a tool would catch. Recommend the tool instead.
-- Refactoring is a behavior-preserving change. It needs green tests before and after, and goes in its own plan tasks, separate from behavior changes.
-- If a principle here conflicts with a superpowers rule, follow superpowers and mention the tension.
+**Deeper references:**
+- `references/pythonic.md`: idioms, protocols, decorators, descriptors, generators, async, gotchas.
+- `references/design.md`: contracts, errors, SOLID, patterns.
+- `references/testing.md`: pytest, mocks, property and mutation testing, refactoring.
 
-## Credit
-
-Condensed and paraphrased from Mariano Anaya, *Clean Code in Python* (2nd ed.). Superpowers is by Jesse Vincent (MIT), included in this repo as a reference at `vendor/superpowers`.
+*Condensed and paraphrased from Mariano Anaya, "Clean Code in Python" (2nd ed.). Superpowers © Jesse Vincent (MIT).*

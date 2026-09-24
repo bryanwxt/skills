@@ -63,6 +63,7 @@ The three lenses answer different questions. Superpowers runs the process for al
 | File | Used when |
 |---|---|
 | `SKILL.md` | Always: flows, lanes, ground rules, brainstorming discipline |
+| `references/coordination.md` | Shared rules for all three lenses (questions, spec outline, plan order, tests, bounded changes, reviews); read once per session |
 | `references/superpowers-hooks.md` | The data track for brainstorming and additions to every other superpowers step |
 | `references/question-bank.md` | Questions with recommended defaults for design, tech choice, review |
 | `references/foundations.md` … `derived-data.md` | Topic knowledge (models, storage, encoding, replication, partitioning, transactions, distributed systems, pipelines) |
