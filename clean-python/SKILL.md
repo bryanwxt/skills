@@ -35,6 +35,10 @@ Don't open the reference files. Always write the `python …` part of the one-li
 
 Verify with the project's own tools and show their output. Put pre-existing problems under follow-ups.
 
+After the change, end with this exact line (the lens check), shared by all three lenses:
+`Lens check: design <ok|note> · python <ok|note> · data <ok|note>`
+Drop python if no .py file changed and data if no data changed; write "ok" only if that lens flags nothing. Add no questions of your own: state lens decisions as defaults under **Defaults chosen**.
+
 ## Inside superpowers steps
 
 Read `references/coordination.md` once per session; it's shared by all three lenses. Then read the section of `references/superpowers-hooks.md` for the current step. For spec content, use `assets/spec-sections.md`. For the reviewer, use `references/review-lens.md`. If tooling is missing, start from `assets/pyproject-tooling.toml`.

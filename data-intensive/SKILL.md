@@ -30,6 +30,10 @@ Don't open the reference files. Write the `data …` part of the lens check only
 
 Otherwise stay silent.
 
+After the change, end with this exact line (the lens check), shared by all three lenses:
+`Lens check: design <ok|note> · python <ok|note> · data <ok|note>`
+Drop python if no .py file changed and data if no data changed; write "ok" only if that lens flags nothing. Add no questions of your own: state lens decisions as defaults under **Defaults chosen**.
+
 ## Inside superpowers steps
 
 Read `references/coordination.md` once per session; it's shared by all three lenses. Then read the section of `references/superpowers-hooks.md` for the current step. **Designing a data architecture from scratch** is brainstorming's architectural path plus the data track in the hooks file; stop after the approved spec if the user wants only the design. For spec content, use `assets/spec-sections.md`. For the reviewer, use `references/review-lens.md`.

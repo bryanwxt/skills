@@ -61,7 +61,7 @@ The interfaces task (types, Protocols, stubs) comes before any schema or migrati
 - Show the failing run's output before the fix and the passing run's output after it. A summary is not evidence.
 
 **Bounded and trivial changes**
-- **Ask no questions.** Resolve each open decision with the smallest safe default, including scope extras, and list it under **Defaults chosen** in the short design. Then ask for one approval and implement.
+- **Lenses add no questions** (brainstorming's own bounded checklist may ask its one). Resolve each lens decision with the smallest safe default, including scope extras, and list it under **Defaults chosen** in the short design. Then ask for one approval and implement.
 - After every code change, including debugging fixes, write this line exactly: `Lens check: design <ok|note> · python <ok|note> · data <ok|note>`.
   - Include python whenever a .py file changes, and data only when data changes.
   - Write "ok" only if that lens flags nothing.

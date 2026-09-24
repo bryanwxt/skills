@@ -31,6 +31,10 @@ Don't open the reference files. In the one-line lens check, write `design ok` un
 
 Put pre-existing design debt under follow-ups.
 
+After the change, end with this exact line (the lens check), shared by all three lenses:
+`Lens check: design <ok|note> · python <ok|note> · data <ok|note>`
+Drop python if no .py file changed and data if no data changed; write "ok" only if that lens flags nothing. Add no questions of your own: state lens decisions as defaults under **Defaults chosen**.
+
 ## Inside superpowers steps
 
 Read `references/coordination.md` once per session; it's shared by all three lenses. Then read the section of `references/superpowers-hooks.md` for the current step:
