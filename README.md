@@ -16,3 +16,4 @@ skill-name/
 | Skill | What it does |
 |---|---|
 | [pyramid-deck](pyramid-deck/) | Builds a presentation end to end using Barbara Minto's Pyramid Principle — SCQA intro, tested pyramid, action-titled storyboard, speaker notes, then renders the deck. |
+| [software-design](software-design/) | Evaluates an existing app's design or designs a new one from scratch, using the complexity-reduction principles of John Ousterhout's *A Philosophy of Software Design* — deep modules, information hiding, red-flag review, design it twice. |
