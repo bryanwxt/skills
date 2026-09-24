@@ -48,14 +48,32 @@ Reference files:
 
 ## The one thing this skill starts: an architecture audit
 
-Superpowers' review looks at a range of commits. When the user asks to audit an existing app's architecture, find complexity hot spots, or judge whether a codebase is well designed, this skill runs the audit itself:
+Superpowers' review only looks at a range of commits. When the user asks to audit an existing app's architecture, find complexity hot spots, or judge whether a codebase is well designed, this skill runs the audit itself, using brainstorming's discipline. If the request also covers Python idioms or data flows, run one joint review instead, as described under "Standalone reviews" in the coordination section of `references/superpowers-hooks.md`.
 
-1. **Map the system.** Read the entry points, layout, and main modules; write one line per module saying what it hides. Find hot spots (most-changed files via `git log`, most-imported modules, public APIs).
-2. **Walk one or two realistic changes** through the code and record every file and concept each touches.
-3. **Scan for red flags** (`references/red-flags.md`) in the hot spots. Each finding has a location, evidence, the symptom and cause, and a concrete fix (with interface signatures if proposing a new interface).
-4. **Classify module depth** (deep / ok / shallow) and check that adjacent layers offer different abstractions.
-5. **Report** with `assets/audit-template.md`, severities in superpowers' terms (Critical / Important / Minor), and credit what's well designed. Follow `superpowers:verification-before-completion`: every claim cites a file and line you actually read.
-6. **Hand off.** Each fix the user wants becomes its own `superpowers:brainstorming` request — classified bounded or architectural by brainstorming, not here — then `writing-plans`. Don't write a remediation plan or code in the audit.
+1. **Classify and announce the path**, so the user can override it:
+   - **Targeted:** one module, boundary, or pain point. Short report.
+   - **Full:** the whole codebase. Map everything, then prioritise.
+
+   When in doubt, take the heavier path. Step up if hidden complexity appears.
+2. **Discover intent.** Ask one question per message, multiple choice, recommended option first. Skip anything the request already answers. Cover:
+   - what prompted the audit (a general check / changes are slow or risky / onboarding pain / a planned big change);
+   - which areas change most or feel most fragile;
+   - what can change (targeted fixes / restructuring / only new code).
+3. **Write back your understanding.** Separate what the user said from your assumptions, and invite correction.
+4. **Map the system.** Read the entry points, layout, and main modules, and write one line per module saying what it hides. Find hot spots: most-changed files (`git log`), most-imported modules, public APIs.
+5. **Walk one or two realistic changes** through the code, recording every file and concept each one touches.
+6. **Scan the hot spots for red flags** (`references/red-flags.md`). Rate each module's depth (deep / ok / shallow). Check that adjacent layers offer different abstractions.
+7. **Present findings in sections**, Critical first, asking after each whether it looks right. Each finding gets:
+   - location (file:line) and evidence;
+   - symptom ← cause;
+   - a concrete fix, with interface signatures if you're proposing a new interface;
+   - a severity in superpowers' terms (Critical / Important / Minor).
+
+   Also credit what's well designed.
+8. **Write the audit** with `assets/audit-template.md` to `docs/superpowers/reviews/YYYY-MM-DD-<topic>-design-review.md`, and commit it.
+9. **Self-review.** Check for placeholders, contradictions, and ambiguity. Every finding must cite code you actually read (`superpowers:verification-before-completion`). List unverified areas.
+10. **User review gate.** Ask the user to review the document before any hand-off.
+11. **Hand off.** Each fix the user wants becomes its own `superpowers:brainstorming` request, and brainstorming classifies it as bounded or architectural. Don't write a remediation plan or code in the audit.
 
 ## Rules
 

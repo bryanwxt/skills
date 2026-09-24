@@ -35,6 +35,7 @@ Reference files:
 - `references/review-lens.md`: a short checklist to paste into the superpowers code reviewer's prompt.
 - `assets/pyproject-tooling.toml`: starter config for black, ruff, mypy, pytest, and coverage.
 - `assets/spec-sections.md`: Python sections to add to a brainstorming spec.
+- `assets/review-template.md`: output format for a full Python review.
 - `README.md`: the human-facing guide to using this skill with superpowers.
 
 ## Where it plugs in
@@ -56,17 +57,29 @@ Reference files:
 
 ## The one thing this skill starts: a Python code review outside a commit range
 
-Superpowers' review covers a range of commits. When the user asks to review a Python file, package, or snippet, or asks "is this Pythonic?", this skill reviews it directly:
+Superpowers' review only looks at a range of commits. When the user asks to review a Python file, package, or snippet, or asks "is this Pythonic?", this skill reviews it directly, using brainstorming's discipline. If the request also covers module structure or data flows, run one joint review instead, as described under "Standalone reviews" in the coordination section of `references/superpowers-hooks.md`.
 
-1. **Read for intent:** what is the code trying to do, and does its structure show that?
-2. **Walk `references/review-checklist.md`** in priority order: correctness hazards, then design, idioms, docs and typing, tests, and tooling. Style goes last, and only if no tool would catch it.
-3. **Write each finding** with location (file:line), the problem, why it matters, and a short before/after snippet. Use superpowers' severities:
-   - **Critical:** a bug, data loss, a security issue, or swallowed errors.
-   - **Important:** design or idiom problems that will spread.
-   - **Minor:** local issues.
-4. **Credit what's done well.** Keep the review in proportion: a 20-line script doesn't need architecture advice.
-5. **Follow `superpowers:verification-before-completion`:** if you claim a check fails or passes, run it and show the output.
-6. **Hand off.** Fixes the user wants go through `superpowers:brainstorming` (brainstorming decides bounded vs architectural), then TDD. Don't rewrite the code inside the review.
+1. **Classify and announce the path**, so the user can override it:
+   - **Quick:** a snippet or a single short file. Give findings in chat with before/after snippets. No document and no question round unless the intent is unclear.
+   - **Full:** a package, module set, or anything where the fixes will need planning. Follow every step below.
+2. **Discover intent (full path).** Ask one question per message, multiple choice, recommended option first. Skip anything already answered. Cover:
+   - what prompted it (a general quality check / bugs keep appearing here / preparing a refactor / onboarding);
+   - which areas matter most;
+   - constraints (Python version, frameworks, whether the public API must stay stable).
+3. **Write back your understanding.** Separate what the user said from your assumptions.
+4. **Read for intent.** What is the code trying to do, and does its structure show that?
+5. **Walk `references/review-checklist.md`** in priority order: correctness hazards, then design, idioms, docs and typing, tests, and tooling. Style goes last, and only if no tool would catch it.
+6. **Present findings in sections**, Critical first (full path), asking after each whether it looks right. Each finding gets:
+   - location (file:line);
+   - the problem and why it matters;
+   - a short before/after snippet;
+   - a severity in superpowers' terms: **Critical** (bug, data loss, security, swallowed errors), **Important** (design or idiom problems that will spread), **Minor** (local).
+
+   Credit what's done well, and keep the review in proportion to the code.
+7. **Write the review (full path)** with `assets/review-template.md` to `docs/superpowers/reviews/YYYY-MM-DD-<topic>-python-review.md`, and commit it.
+8. **Self-review.** Any claim that a check passes or fails must come from running it and showing the output (`superpowers:verification-before-completion`). List unverified areas.
+9. **User review gate (full path).**
+10. **Hand off.** Fixes the user wants go through `superpowers:brainstorming`, then TDD. Don't rewrite the code inside the review.
 
 ## Rules
 

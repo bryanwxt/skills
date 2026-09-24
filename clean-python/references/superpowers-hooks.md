@@ -2,6 +2,70 @@
 
 Superpowers decides *when* each step happens and how to talk to the user. This file says what the Python lens adds at each step. Never skip or reorder a superpowers step, and never add approval gates of your own.
 
+## Coordination with the other lenses
+
+<!-- coordination:start — identical in software-design, clean-python and data-intensive; check with scripts/check-coordination.sh -->
+These rules apply when more than one of `software-design`, `clean-python` and `data-intensive` is active in the same superpowers workflow. When only one is active, use that lens's own sections and ignore the budget.
+
+**Questions (brainstorming).** The lenses share one queue, asked in brainstorming's format: one per message, recommended option first. The budget is **at most 6 lens questions in total**. Ask only questions whose answer would change the design; state the rest as assumptions in brainstorming's understanding note. Skip anything the context already answers. Order, with duplicates merged:
+1. Workload and loss tolerance (data-intensive).
+2. Guarantees required: money, inventory, uniqueness (data-intensive).
+3. Likely directions of change and growth horizon, as **one** question (software-design + data-intensive).
+4. Source of truth for key entities (data-intensive).
+5. What callers must never need to know (software-design).
+6. Concurrency model: sync, async, or workers, as **one** question (clean-python + data-intensive).
+7. Extension-point mechanism, value objects, typing strictness (clean-python). Usually assumptions, not questions.
+
+**Approaches.** Brainstorming's 2–3 approaches differ on the **dominant risk**. If data guarantees, scale, or multiple stores dominate, data-intensive sets the axis (different data architectures). Otherwise software-design sets it (different module decompositions). The other active lenses evaluate each approach on their own criteria. clean-python never sets the axis.
+
+**Spec outline.** Fold lens content into brainstorming's sections rather than appending separate blocks:
+
+| Brainstorming section | Contents |
+|---|---|
+| Architecture | Chosen and rejected approaches (all lenses); knowledge to hide (software-design); load and targets, guarantees, systems of record (data-intensive) |
+| Components | One card per module (software-design), including its Python form — Protocol/ABC, dataclasses, package path (clean-python) |
+| Data flow | Dataflow diagram, replication and partitioning, encoding and evolution (data-intensive); layering (software-design) |
+| Error handling | **One** table: failure or error → where it's handled (defined away / masked / exposed) → exception type → caller-visible? Merges software-design's error choices, clean-python's exception hierarchy, and data-intensive's failure analysis |
+| Testing | Test levels and test doubles, following the rule below |
+| Implementation notes | Runtime, tooling, required checks, package layout (clean-python); operations, monitoring, product facts relied on (data-intensive) |
+
+Spec self-review runs every active lens's checks in **one** pass.
+
+**Plan order (writing-plans).** Skip any step that doesn't apply:
+1. Tooling, if missing (clean-python).
+2. Characterization tests for code that will be refactored.
+3. Behavior-preserving refactors.
+4. Interfaces and interface comments (software-design).
+5. Schema expansion, constraints, unique indexes, idempotency tables, outbox/CDC (data-intensive).
+6. Implementation, test-first.
+7. Migrate and backfill, then switch readers (data-intensive).
+8. Contract the old schema (data-intensive).
+
+Every task ends with its verification commands.
+
+**Test doubles.**
+- Data-correctness tests (races, constraints, isolation, idempotency, migrations) run against the **real database engine**, e.g. in a container. Never mock the database for these.
+- External services (payment gateways, third-party APIs, clocks) use **injected fakes**.
+- `mock.patch` is a last resort, patched where the name is looked up. Needing many patches is a design signal.
+- All tests target public interfaces.
+
+**Bounded changes.** Run **one** combined check and report it in one line of brainstorming's short design:
+- Leaks a decision into a second module, or adds a pass-through (software-design)?
+- Unprotected read-modify-write or check-then-act, a dual write, an incompatible schema or message change, or a retry without idempotency (data-intensive)?
+- A mutable default, bare `except`, flag parameter, dependency created inside a function, or an undeclared new dependency (clean-python)?
+
+**Standalone reviews.** Route "review / audit this" requests:
+- structure → software-design audit;
+- a Python file or snippet → clean-python review;
+- data flows, stores, or an incident → data-intensive review.
+
+If a request spans more than one, run **one joint review**: one question round (shared budget), one system map, findings grouped by lens on one severity scale (Critical / Important / Minor), one document at `docs/superpowers/reviews/YYYY-MM-DD-<topic>-review.md`, one self-review, one user review gate, and one hand-off list.
+
+**Task briefs (subagents).** Include only what the task touches: its module card (software-design), at most 5 Python rules that apply to it (clean-python), and the guarantee it must preserve (data-intensive).
+
+**Reviewer.** Add each lens's `review-lens.md` only when the diff touches that lens's area.
+<!-- coordination:end -->
+
 ## Contents
 1. brainstorming: architectural path
 2. brainstorming: bounded and spike paths
@@ -30,7 +94,7 @@ Superpowers decides *when* each step happens and how to talk to the user. This f
 
 Follow what exists. Record gaps (e.g. no type checker in CI) as design inputs, not as fixes to make now.
 
-**Clarifying questions.** Add only the Python choices that change the design, asked in brainstorming's format (one per message, multiple choice, recommended option first). Skip any the context already answers.
+**Clarifying questions.** When other lenses are active, the coordination section's shared budget and order apply. Add only the Python choices that change the design, asked in brainstorming's format (one per message, multiple choice, recommended option first). Skip any the context already answers.
 - *Sync or async?* Recommend matching the codebase. Choose async only when the workload is dominated by concurrent I/O.
 - *Extension points:* `typing.Protocol` (structural, recommended for plug-ins and test doubles) or ABC (when you need shared implementation or registration)?
 - *Value objects:* `@dataclass(frozen=True)`, or a validation library such as pydantic at I/O boundaries (recommended: dataclasses inside, validation at the edges)?
@@ -61,7 +125,7 @@ Don't write a separate document.
 
 ## 2. brainstorming: bounded and spike paths
 
-**Bounded.** Before the short in-chat design, check the change quickly:
+**Bounded.** (With other lenses active, use the coordination section's combined check instead.) Before the short in-chat design, check the change quickly:
 - Does it add a mutable default, a bare `except`, or a boolean flag parameter that switches behaviour?
 - Does it grow a function's argument list past what a caller can reasonably gather? If so, suggest a parameter object.
 - Does it add a dependency? Justify it, and put it in the package's dependencies, not just installed locally.
@@ -72,6 +136,8 @@ Mention anything found in one line of the in-chat design. If fixing it would res
 **Spike.** Spike code is throwaway, so don't polish it. Note in the recommendation any Python finding that affects the real design (e.g. "the library is sync-only").
 
 ## 3. writing-plans
+
+With other lenses active, follow the coordination section's plan order; the points below add detail.
 
 - **Exact paths.** Use the package layout from the spec (e.g. `src/<pkg>/…`, `tests/…` mirroring it). writing-plans needs exact file paths; give them.
 - **Tooling first if missing.** If the project lacks a formatter, linter, type checker, or test config, the first task adds them (start from `assets/pyproject-tooling.toml`, adapted to the project's Python version) with CI wiring, before feature tasks. Skip this if tools exist.
@@ -91,7 +157,7 @@ Mention anything found in one line of the in-chat design. If fixing it would res
   - Put fixtures in `conftest.py` when shared, and keep them small.
   - Test the public interface, not private helpers.
 - **Choose cases** from boundaries, equivalence classes, and edge cases (empty, `None`, huge, Unicode, duplicates). Use Hypothesis for properties that should always hold (round-trips, invariants).
-- **Mocks** only at external boundaries:
+- **Mocks** only at external boundaries, and never for the database in data-correctness tests (see the coordination section):
   - Use `create_autospec` or `spec=` so bad calls fail.
   - `mock.patch` where the name is looked up, not where it's defined.
   - Needing many patches is a design signal. Prefer injecting a fake through the constructor, and flag it for review.

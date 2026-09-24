@@ -1,7 +1,13 @@
 # Architecture audit: <application>
 
+**Path:** targeted / full · **Date:** <date> · **Saved at:** `docs/superpowers/reviews/YYYY-MM-DD-<topic>-design-review.md`
 **Scope:** <what was read, what was sampled, what wasn't read>
-**Date:** <date>
+
+## Understanding (written back and confirmed)
+- **Prompt:** <…>
+- **Areas that matter most:** <…>
+- **What can change:** <…>
+- **Stated by user:** <…> · **Assumed:** <…>
 
 ## Summary
 <3–5 sentences: overall health, the biggest source of complexity, and the single highest-leverage change.>
@@ -40,3 +46,8 @@ Each fix the user wants becomes its own `superpowers:brainstorming` request, the
 
 ## Not verified
 <Areas not read and conclusions that depend on them.>
+
+## Self-review
+- [ ] Every finding cites code actually read
+- [ ] No placeholders, contradictions, or ambiguity
+- [ ] Unverified areas listed

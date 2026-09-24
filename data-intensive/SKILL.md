@@ -112,7 +112,7 @@ For "Postgres or DynamoDB?", "Kafka or SQS?", "Avro or Protobuf?", "do we need a
 
 ## 3. Review a data architecture or an incident
 
-For "review our data architecture", "what could go wrong with this pipeline?", "why did we lose writes last week?", and design-doc reviews. For a **live** incident, `superpowers:systematic-debugging` leads (hooks §7). This flow is for reviews and post-incident analysis.
+For "review our data architecture", "what could go wrong with this pipeline?", "why did we lose writes last week?", and design-doc reviews. For a **live** incident, `superpowers:systematic-debugging` leads (hooks §7). This flow is for reviews and post-incident analysis. If the request also covers module structure or Python code, run one joint review instead (see "Standalone reviews" in the coordination section of `references/superpowers-hooks.md`).
 
 **Classify and announce** one path:
 - **Targeted:** one component, flow, or incident. Go deep, with a short report.

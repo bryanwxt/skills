@@ -22,6 +22,24 @@ skill-name/
 | [teaching-tech](teaching-tech/) | Designs, reviews, and delivers technical teaching using Greg Wilson's *Teaching Tech Together* (CC BY 4.0) — backward lesson design, personas, diagnostic MCQs, faded examples, live coding, workshops, online courses, tutoring, onboarding, inclusivity, and community building. Aligns intent by asking MCQs with recommended options. |
 | [pragmatic-programmer](pragmatic-programmer/) | Reviews, debugs, tests, builds/refactors, designs, estimates, and coaches using Hunt & Thomas's *The Pragmatic Programmer* — routes to one of 8 modes, cites all 70 tips and 11 checklists, returns ranked findings with options and patches, and translates 1999-era tooling to modern equivalents. |
 
+## Using the superpowers lenses together
+
+`software-design`, `clean-python` and `data-intensive` are lenses for [superpowers](https://github.com/obra/superpowers). Superpowers runs the process; each lens supplies judgment in its own lane (module design / Python / data systems). When several are active at once, a shared **coordination section** in each lens's `references/superpowers-hooks.md` sets:
+
+- one question budget and order for brainstorming;
+- which lens sets the axis for comparing approaches;
+- a merged spec outline;
+- one plan order;
+- the test-double rule (real database for correctness tests, fakes for external services);
+- one combined check for small changes;
+- joint reviews.
+
+The three copies must stay identical. Check with:
+
+```bash
+scripts/check-coordination.sh
+```
+
 ## References (third-party)
 
 Not my skills — included as read-only references via git submodule.
