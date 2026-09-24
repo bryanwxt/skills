@@ -13,4 +13,6 @@ skill-name/
 
 ## Skills
 
-_None yet._
+| Skill | What it does |
+|---|---|
+| [pyramid-deck](pyramid-deck/) | Builds a presentation end to end using Barbara Minto's Pyramid Principle — SCQA intro, tested pyramid, action-titled storyboard, speaker notes, then renders the deck. |
