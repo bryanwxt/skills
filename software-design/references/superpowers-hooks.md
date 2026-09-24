@@ -12,7 +12,7 @@ These rules apply whenever any of `software-design`, `clean-python` or `data-int
 - Budget: **at most 6 lens questions in total**. Ask only when the answer would change the design; state the rest as assumptions in brainstorming's understanding note. Skip anything the context already answers.
 - **Choices vs facts:**
   - For a *choice* (which approach, which guarantee to pay for), put the recommended option first.
-  - For a *fact* about the user's world (load, traffic shape, domain rules, team, existing systems), **don't recommend**. Offer realistic ranges plus "Not sure — assume <smallest reasonable value>".
+  - For a *fact* about the user's world (load, traffic shape, domain rules, team, existing systems, what prompted a request), **don't recommend**. Don't label any option "recommended" or "default" on these. Offer realistic ranges plus "Not sure — assume <smallest reasonable value>".
   - A default the user accepts is recorded under **Assumed (default accepted)**, never under "Stated by user". Don't build a recommendation on an assumed fact without saying so.
 - Order, with duplicates merged:
   1. Workload and loss tolerance (data-intensive).
@@ -60,8 +60,8 @@ Every task ends with its verification commands. If planning needs to change the 
 - Show the failing run's output before writing the fix, and the passing run's output after. A summary line alone is not evidence.
 
 **Bounded changes.**
-- Brainstorming's short design states any open decision as a **default** (e.g. "missing id returns None"). Ask a question only when no safe default exists. One approval message, then implement.
-- The design includes **one** line: `Lens check: design … · python … · data …`. Include the python part whenever the change touches Python, and the data part only when the change touches data. Items:
+- Brainstorming's short design states any open decision as a **default** (e.g. "missing id returns None", "no read API until one is needed"). Scope extras such as extra read methods, return-type changes, or helper APIs are defaults, not questions. Ask a question only when no safe default exists. One approval message, then implement.
+- The design includes **one** line in exactly this form: `Lens check: design … · python … · data …` (write "ok" for a lens with nothing to flag). Include the python part whenever the change touches Python, and the data part only when the change touches data. Items:
   - design: leaks a decision into a second module, or adds a pass-through;
   - data: unprotected read-modify-write or check-then-act, a dual write or unstated side-effect semantics, an incompatible schema or message change, or a retry without idempotency;
   - python: a mutable default, bare `except`, flag parameter, dependency created inside a function, or an undeclared new dependency.
