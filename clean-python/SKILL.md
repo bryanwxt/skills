@@ -37,6 +37,16 @@ Reference files:
 - `assets/review-template.md`: output format for a full Python review.
 - `README.md`: the human-facing guide to using this skill with superpowers.
 
+## Quick rule for small and trivial changes
+
+For a bounded or trivial Python change, don't open the reference files. Always add the `python …` part of the one-line lens check (`Lens check: design … · python … · data …`). Flag:
+- a mutable default, bare `except`, or flag parameter;
+- a dependency created inside a function;
+- an undeclared new dependency;
+- a missing type hint or docstring on a new public function.
+
+Use the project's tools for verification and show their output. List pre-existing problems as follow-ups.
+
 ## Where it plugs in
 
 | Superpowers step | What this skill adds | Details |
@@ -68,15 +78,15 @@ Superpowers' review only looks at a range of commits. When the user asks to revi
 3. **Write back your understanding.** Separate what the user said from your assumptions.
 4. **Read for intent.** What is the code trying to do, and does its structure show that?
 5. **Walk `references/review-checklist.md`** in priority order: correctness hazards, then design, idioms, docs and typing, tests, and tooling. Style goes last, and only if no tool would catch it.
-6. **Present findings in sections**, Critical first (full path), asking after each whether it looks right. Each finding gets:
+6. **Rate each finding.** Findings are sorted by severity, each tagged with its lens when this is a joint review. Each finding gets:
    - location (file:line);
    - the problem and why it matters;
    - a short before/after snippet;
    - a severity in superpowers' terms: **Critical** (bug, data loss, security, swallowed errors), **Important** (design or idiom problems that will spread), **Minor** (local).
 
    Credit what's done well, and keep the review in proportion to the code.
-7. **Write the review (full path)** with `assets/review-template.md` to `docs/superpowers/reviews/YYYY-MM-DD-<topic>-python-review.md`, and commit it.
-8. **Self-review.** Any claim that a check passes or fails must come from running it and showing the output (`superpowers:verification-before-completion`). List unverified areas.
+7. **Write the review directly (full path)**, with no section-by-section approvals and only a short summary in chat, with `assets/review-template.md` to `docs/superpowers/reviews/YYYY-MM-DD-<topic>-python-review.md`, and commit it.
+8. **Self-review.** Never tick an item you haven't verified. Any claim that a check passes or fails must come from running it and showing the output (`superpowers:verification-before-completion`). List unverified areas.
 9. **User review gate (full path).**
 10. **Hand off.** Fixes the user wants go through `superpowers:brainstorming`, then TDD. Don't rewrite the code inside the review.
 

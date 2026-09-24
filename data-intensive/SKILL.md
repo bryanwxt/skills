@@ -22,6 +22,16 @@ This skill adds a data-systems lens to superpowers: what guarantees each compone
 - **`clean-python`** decides how it's written in Python, for example the transaction retry loop, session handling, or an idempotency-key check.
 - For a data-heavy Python feature, use all three. Each adds its own sections to one brainstorming spec, never separate documents.
 
+## Quick rule for small and trivial changes
+
+For a bounded or trivial change, don't open the reference files. Add the `data …` part of the one-line lens check only when the change touches data:
+- an unprotected read-modify-write or check-then-act;
+- a dual write, or side-effect semantics not stated;
+- an incompatible schema or message change;
+- a retry without idempotency.
+
+Otherwise stay silent. List pre-existing problems as follow-ups.
+
 ## Ground rules (every flow)
 
 1. **Start from the workload.** Get or estimate the load parameters that matter:
@@ -43,11 +53,11 @@ This skill adds a data-systems lens to superpowers: what guarantees each compone
 
 Flows 2 and 3 borrow brainstorming's elements so they feel the same as the rest of superpowers:
 - **Classify and announce the path** before the first question, so the user can override it. Take the heavier path when in doubt. If hidden complexity appears, step up; never step down mid-task.
-- **Discover intent:** ask **one question per message**, multiple choice where possible, with the **recommended option first** and its reason. Use `references/question-bank.md`. Skip anything the request already answers.
-- **Write back your understanding:** outcome, constraints, success criteria. Separate what the user said from what you assumed, and invite correction.
+- **Discover intent:** ask **one question per message**, multiple choice where possible. Put a recommended option first only for *choices*. For *facts* about the user's world, offer ranges plus "Not sure — assume X" with no recommendation. Use `references/question-bank.md`. Skip anything the request already answers.
+- **Write back your understanding:** outcome, constraints, success criteria. Separate what the user said from what you assumed. A default the user accepted counts as assumed. Invite correction.
 - **Propose 2–3 options** with trade-offs, leading with your recommendation.
-- **Present in sections** scaled to complexity, asking after each whether it looks right.
-- **Write the document**, then run a **self-review**: placeholders, contradictions, ambiguity, scope, plus this skill's own checks (named guarantees, failure walk, product facts sourced).
+- **Write the document directly** after the write-back. Don't present sections for approval first; the document's review gate is the only content gate. In chat, give a short summary, not the full content.
+- **Self-review**: placeholders, contradictions, ambiguity, scope, plus this skill's own checks (named guarantees, failure walk, product facts sourced). Never tick an item you haven't verified; list it under "Not verified" instead.
 - **User review gate:** ask the user to review the written document before any hand-off.
 - **Hand off**, never implement: adoption or fixes go to `superpowers:brainstorming`, then `writing-plans`.
 
@@ -95,20 +105,21 @@ For "Postgres or DynamoDB?", "Kafka or SQS?", "Avro or Protobuf?", "do we need a
 2. **Write back your understanding.** Separate what the user said from your assumptions, and invite correction.
 3. **Compare categories before products** (`references/decision-guides.md`), for example log-based vs traditional broker before Kafka vs Kinesis. Keep 2–3 real options and lead with your recommendation.
 4. **Check product facts** in current docs, with dated citations (ground rule 7).
-5. **Present in sections**, asking after each whether it looks right:
-   - the options and how each fits the workload;
+5. **Write the decision record directly** with `assets/decision-record-template.md` and commit it. Cover:
+   - how each option fits the workload;
    - how each behaves under the named failures;
    - operational cost;
    - migration and exit cost.
-6. **Write the decision record** with `assets/decision-record-template.md` and commit it.
-7. **Self-review:**
+
+   No section-by-section approvals. In chat, give the recommendation and a short summary.
+6. **Self-review** (never tick an unverified item):
    - brainstorming's placeholder, contradiction, ambiguity, and scope checks;
    - guarantees named precisely;
    - failure behaviour covered for each option;
    - product facts cited and dated;
    - a "revisit when" condition stated.
-8. **User review gate.** Ask the user to review the record.
-9. **Hand off.** Adopting the choice is a new `superpowers:brainstorming` request, usually architectural when it replaces an existing store.
+7. **User review gate.** Ask the user to review the record.
+8. **Hand off.** Adopting the choice is a new `superpowers:brainstorming` request, usually architectural when it replaces an existing store.
 
 ## 3. Review a data architecture or an incident
 
@@ -135,16 +146,18 @@ For "review our data architecture", "what could go wrong with this pipeline?", "
    A Mermaid diagram is fine. For an incident, add a timeline.
 4. **Walk it** with `references/review-checklist.md`. Prioritise by blast radius: data loss and silent corruption first, then correctness anomalies, availability, performance, and operability. For each finding, write the concrete event sequence that goes wrong, how likely and how bad it is, and the fix with its trade-off.
 5. **Look hardest for** dual writes, check-then-act races, ordering by wall clock, missing idempotency, locks without fencing, and assumptions about isolation levels.
-6. **Present findings in sections**, starting with Critical and asking after each whether it looks right. Use superpowers' severities:
+6. **Rate each finding** with superpowers' severities:
    - **Critical:** data loss, silent corruption, broken invariants.
    - **Important:** correctness or availability problems that will surface under load or failure.
    - **Minor:** everything else.
-7. **Write the review** with `assets/review-template.md` and commit it.
-8. **Self-review:**
+
+   A side effect in the write path (notification, email, webhook) is its own finding, written as an event sequence.
+7. **Write the review directly** with `assets/review-template.md`, findings sorted by severity, and commit it. No findings-by-section approvals. In chat, give a short summary: counts per severity and the top 3.
+8. **Self-review** (never tick an unverified item):
    - every finding cites evidence you actually read or ran;
    - every failure is written as an event sequence;
    - guarantees are named;
-   - product facts are sourced;
+   - product facts are fetched and dated, or listed as not verified;
    - unverified areas are listed.
 9. **User review gate.**
 10. **Hand off.** Each fix the user wants becomes its own `superpowers:brainstorming` request, which decides bounded vs architectural.

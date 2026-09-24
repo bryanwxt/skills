@@ -27,6 +27,15 @@ Reference files:
 - `assets/audit-template.md` — output format for an architecture audit.
 - `README.md` — the human-facing guide to using this skill with superpowers.
 
+## Quick rule for small and trivial changes
+
+For a bounded or trivial change, don't open the reference files. Add the `design …` part of the one-line lens check (`Lens check: design … · python … · data …`) only if the change:
+- leaks a decision into a second module;
+- adds a pass-through method, layer, or parameter;
+- makes an interface shallower.
+
+Otherwise stay silent. List pre-existing design debt as follow-ups.
+
 ## Where it plugs in
 
 | Superpowers step | What this skill adds | Details |
@@ -62,15 +71,15 @@ Superpowers' review only looks at a range of commits. When the user asks to audi
 4. **Map the system.** Read the entry points, layout, and main modules, and write one line per module saying what it hides. Find hot spots: most-changed files (`git log`), most-imported modules, public APIs.
 5. **Walk one or two realistic changes** through the code, recording every file and concept each one touches.
 6. **Scan the hot spots for red flags** (`references/red-flags.md`). Rate each module's depth (deep / ok / shallow). Check that adjacent layers offer different abstractions.
-7. **Present findings in sections**, Critical first, asking after each whether it looks right. Each finding gets:
+7. **Rate each finding.** Findings are sorted by severity, each tagged with its lens when this is a joint review. Each finding gets:
    - location (file:line) and evidence;
    - symptom ← cause;
    - a concrete fix, with interface signatures if you're proposing a new interface;
    - a severity in superpowers' terms (Critical / Important / Minor).
 
    Also credit what's well designed.
-8. **Write the audit** with `assets/audit-template.md` to `docs/superpowers/reviews/YYYY-MM-DD-<topic>-design-review.md`, and commit it.
-9. **Self-review.** Check for placeholders, contradictions, and ambiguity. Every finding must cite code you actually read (`superpowers:verification-before-completion`). List unverified areas.
+8. **Write the audit directly** (no section-by-section approvals; in chat give only a short summary) with `assets/audit-template.md` to `docs/superpowers/reviews/YYYY-MM-DD-<topic>-design-review.md`, and commit it.
+9. **Self-review.** Check for placeholders, contradictions, and ambiguity. Never tick an item you haven't verified. Every finding must cite code you actually read (`superpowers:verification-before-completion`). List unverified areas.
 10. **User review gate.** Ask the user to review the document before any hand-off.
 11. **Hand off.** Each fix the user wants becomes its own `superpowers:brainstorming` request, and brainstorming classifies it as bounded or architectural. Don't write a remediation plan or code in the audit.
 

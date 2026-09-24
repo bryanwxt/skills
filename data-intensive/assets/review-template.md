@@ -7,7 +7,7 @@
 - **Flows in scope:** <…>
 - **Guarantees the business assumes:** <named precisely>
 - **What can change:** <…>
-- **Stated by user:** <…> · **Assumed:** <…>
+- **Stated by user:** <only what the user actually said> · **Assumed (defaults accepted or inferred):** <…>
 
 ## System map
 ```mermaid
@@ -25,8 +25,9 @@ Isolation level in use: <per database, from config> · Replication: <topology, s
 
 ## Findings
 Severity uses superpowers' scale: **Critical** (data loss, silent corruption, broken invariants), **Important** (correctness or availability problems under load or failure), **Minor**.
+Sorted by severity, Critical first. In a joint review, tag each finding with its lens: `[data]`, `[design]` or `[python]`. Assign by concern: schema, constraints and invariants → data; module boundaries → design; idioms, typing and tooling → python.
 
-### 1. <Title> — <Critical / Important / Minor>
+### 1. <Title> — <Critical / Important / Minor> <[lens] in joint reviews>
 - **Where:** <component, file:line, config>
 - **What goes wrong:** <concrete event sequence>
 - **Likelihood / impact:** <…>
@@ -47,7 +48,10 @@ Each fix the user wants becomes its own `superpowers:brainstorming` request. Sug
 <Areas not read or tested, and conclusions that depend on them.>
 
 ## Self-review
+Tick only what you actually verified. Anything unticked must appear under "Not verified".
+
 - [ ] Every finding has evidence and an event sequence
 - [ ] Guarantees named precisely
-- [ ] Product facts cited and dated
+- [ ] Product facts fetched and dated (or listed under Not verified)
+- [ ] Side effects in the write path covered as findings with event sequences
 - [ ] Unverified areas listed

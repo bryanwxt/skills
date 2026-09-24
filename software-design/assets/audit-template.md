@@ -7,7 +7,7 @@
 - **Prompt:** <…>
 - **Areas that matter most:** <…>
 - **What can change:** <…>
-- **Stated by user:** <…> · **Assumed:** <…>
+- **Stated by user:** <only what the user actually said> · **Assumed (defaults accepted or inferred):** <…>
 
 ## Summary
 <3–5 sentences: overall health, the biggest source of complexity, and the single highest-leverage change.>
@@ -25,8 +25,9 @@ Files and concepts touched: <list>. Complexity observed: <symptom, with specific
 
 ## Findings
 Severity uses superpowers' scale: **Critical** (data loss, security, broken invariants), **Important** (design problems that spread with future changes in modules others depend on), **Minor** (local).
+Sorted by severity, Critical first. In a joint review, tag each finding with its lens: `[data]`, `[design]` or `[python]`. Assign by concern: schema, constraints and invariants → data; module boundaries → design; idioms, typing and tooling → python.
 
-### 1. <Short title> — <Critical / Important / Minor>
+### 1. <Short title> — <Critical / Important / Minor> <[lens] in joint reviews>
 - **Where:** <file:line>
 - **Red flag:** <name>
 - **Evidence:** <2–3 lines from the code you read>
@@ -48,6 +49,8 @@ Each fix the user wants becomes its own `superpowers:brainstorming` request, the
 <Areas not read and conclusions that depend on them.>
 
 ## Self-review
+Tick only what you actually verified. Anything unticked must appear under "Not verified".
+
 - [ ] Every finding cites code actually read
 - [ ] No placeholders, contradictions, or ambiguity
 - [ ] Unverified areas listed

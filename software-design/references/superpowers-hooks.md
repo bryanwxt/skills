@@ -5,33 +5,43 @@ Superpowers decides *when* each step happens and how to talk to the user. This f
 ## Coordination with the other lenses
 
 <!-- coordination:start — identical in software-design, clean-python and data-intensive; check with scripts/check-coordination.sh -->
-These rules apply when more than one of `software-design`, `clean-python` and `data-intensive` is active in the same superpowers workflow. When only one is active, use that lens's own sections and ignore the budget.
+These rules apply whenever any of `software-design`, `clean-python` or `data-intensive` is active in a superpowers workflow. The question budget and the approach-axis rule only matter when more than one lens is active.
 
-**Questions (brainstorming).** The lenses share one queue, asked in brainstorming's format: one per message, recommended option first. The budget is **at most 6 lens questions in total**. Ask only questions whose answer would change the design; state the rest as assumptions in brainstorming's understanding note. Skip anything the context already answers. Order, with duplicates merged:
-1. Workload and loss tolerance (data-intensive).
-2. Guarantees required: money, inventory, uniqueness (data-intensive).
-3. Likely directions of change and growth horizon, as **one** question (software-design + data-intensive).
-4. Source of truth for key entities (data-intensive).
-5. What callers must never need to know (software-design).
-6. Concurrency model: sync, async, or workers, as **one** question (clean-python + data-intensive).
-7. Extension-point mechanism, value objects, typing strictness (clean-python). Usually assumptions, not questions.
+**Questions (brainstorming).**
+- The lenses share one queue, in brainstorming's format: one question per message.
+- Budget: **at most 6 lens questions in total**. Ask only when the answer would change the design; state the rest as assumptions in brainstorming's understanding note. Skip anything the context already answers.
+- **Choices vs facts:**
+  - For a *choice* (which approach, which guarantee to pay for), put the recommended option first.
+  - For a *fact* about the user's world (load, traffic shape, domain rules, team, existing systems), **don't recommend**. Offer realistic ranges plus "Not sure — assume <smallest reasonable value>".
+  - A default the user accepts is recorded under **Assumed (default accepted)**, never under "Stated by user". Don't build a recommendation on an assumed fact without saying so.
+- Order, with duplicates merged:
+  1. Workload and loss tolerance (data-intensive).
+  2. Guarantees required: money, inventory, uniqueness, and the delivery semantics of any side effect the feature depends on (data-intensive).
+  3. Likely directions of change and growth horizon, as **one** question (software-design + data-intensive).
+  4. Source of truth for key entities (data-intensive).
+  5. What callers must never need to know (software-design).
+  6. Concurrency model: sync, async, or workers, as **one** question (clean-python + data-intensive).
+  7. Extension-point mechanism, value objects, typing strictness (clean-python). Usually assumptions, not questions.
 
-**Approaches.** Brainstorming's 2–3 approaches differ on the **dominant risk**. If data guarantees, scale, or multiple stores dominate, data-intensive sets the axis (different data architectures). Otherwise software-design sets it (different module decompositions). The other active lenses evaluate each approach on their own criteria. clean-python never sets the axis.
+**Approaches.**
+- The 2–3 approaches differ on the **dominant risk**: data-intensive sets the axis when data guarantees, scale, or multiple stores dominate; otherwise software-design does. clean-python never sets the axis.
+- Every other active lens adds **one line per approach** with its verdict (e.g. `design: … · python: …`).
 
-**Spec outline.** Fold lens content into brainstorming's sections rather than appending separate blocks:
+**Spec outline.** Fold lens content into brainstorming's sections rather than appending blocks:
 
 | Brainstorming section | Contents |
 |---|---|
 | Architecture | Chosen and rejected approaches (all lenses); knowledge to hide (software-design); load and targets, guarantees, systems of record (data-intensive) |
-| Components | One card per module (software-design), including its Python form — Protocol/ABC, dataclasses, package path (clean-python) |
+| Components | One card per module (software-design), including its Python form: Protocol/ABC, dataclasses, package path (clean-python) |
 | Data flow | Dataflow diagram, replication and partitioning, encoding and evolution (data-intensive); layering (software-design) |
-| Error handling | **One** table: failure or error → where it's handled (defined away / masked / exposed) → exception type → caller-visible? Merges software-design's error choices, clean-python's exception hierarchy, and data-intensive's failure analysis |
-| Testing | Test levels and test doubles, following the rule below |
+| Error handling | **One** merged table: failure or error → where it's handled (defined away / masked / exposed) → exception type → caller-visible? Covers software-design's error choices, clean-python's exception hierarchy, and data-intensive's failure analysis |
+| Testing | Test levels and test doubles, per the rule below |
 | Implementation notes | Runtime, tooling, required checks, package layout (clean-python); operations, monitoring, product facts relied on (data-intensive) |
 
-Spec self-review runs every active lens's checks in **one** pass.
+- Spec self-review runs every active lens's checks in **one** pass.
+- **Side effects are dual writes.** Any external side effect tied to a commit (notification, email, webhook, event) must have its delivery semantics stated: at-most-once after commit, or at-least-once via outbox and idempotent consumer. Never write "no dual write" while such a side effect exists.
 
-**Plan order (writing-plans).** Skip any step that doesn't apply:
+**Plan order (writing-plans).** Skip steps that don't apply:
 1. Tooling, if missing (clean-python).
 2. Characterization tests for code that will be refactored.
 3. Behavior-preserving refactors.
@@ -41,25 +51,40 @@ Spec self-review runs every active lens's checks in **one** pass.
 7. Migrate and backfill, then switch readers (data-intensive).
 8. Contract the old schema (data-intensive).
 
-Every task ends with its verification commands.
+Every task ends with its verification commands. If planning needs to change the approved spec, list the changes and ask before committing them.
 
-**Test doubles.**
-- Data-correctness tests (races, constraints, isolation, idempotency, migrations) run against the **real database engine**, e.g. in a container. Never mock the database for these.
-- External services (payment gateways, third-party APIs, clocks) use **injected fakes**.
-- `mock.patch` is a last resort, patched where the name is looked up. Needing many patches is a design signal.
+**Tests.**
+- Data-correctness tests (races, constraints, isolation, idempotency, migrations) run against the **real database engine**; never mock it.
+- External services (payment gateways, third-party APIs, clocks) use **injected fakes**. `mock.patch` is a last resort, patched where the name is looked up.
 - All tests target public interfaces.
+- Show the failing run's output before writing the fix, and the passing run's output after. A summary line alone is not evidence.
 
-**Bounded changes.** Run **one** combined check and report it in one line of brainstorming's short design:
-- Leaks a decision into a second module, or adds a pass-through (software-design)?
-- Unprotected read-modify-write or check-then-act, a dual write, an incompatible schema or message change, or a retry without idempotency (data-intensive)?
-- A mutable default, bare `except`, flag parameter, dependency created inside a function, or an undeclared new dependency (clean-python)?
+**Bounded changes.**
+- Brainstorming's short design states any open decision as a **default** (e.g. "missing id returns None"). Ask a question only when no safe default exists. One approval message, then implement.
+- The design includes **one** line: `Lens check: design … · python … · data …`. Include the python part whenever the change touches Python, and the data part only when the change touches data. Items:
+  - design: leaks a decision into a second module, or adds a pass-through;
+  - data: unprotected read-modify-write or check-then-act, a dual write or unstated side-effect semantics, an incompatible schema or message change, or a retry without idempotency;
+  - python: a mutable default, bare `except`, flag parameter, dependency created inside a function, or an undeclared new dependency.
+- List pre-existing problems separately as follow-ups, not in the lens check.
+- For a bounded change or a trivial one, don't open the lens reference files; the SKILL.md quick rule is enough.
 
-**Standalone reviews.** Route "review / audit this" requests:
-- structure → software-design audit;
-- a Python file or snippet → clean-python review;
-- data flows, stores, or an incident → data-intensive review.
+**Standalone reviews and decision records.**
+- **Route:**
+  - structure → software-design audit;
+  - a Python file or snippet → clean-python review;
+  - data flows, stores, or an incident → data-intensive review;
+  - a technology choice → data-intensive decision.
 
-If a request spans more than one, run **one joint review**: one question round (shared budget), one system map, findings grouped by lens on one severity scale (Critical / Important / Minor), one document at `docs/superpowers/reviews/YYYY-MM-DD-<topic>-review.md`, one self-review, one user review gate, and one hand-off list.
+  A request spanning more than one gets **one joint review**.
+- **Flow:** announce the path → questions (shared budget, choices vs facts) → write back your understanding → **write the document directly** → self-review → one user review gate → hand-off.
+  - Don't present sections or findings for approval before the document exists. The document's review gate is the only content gate.
+  - In chat, give a short summary and the path, not the full content.
+- **Findings** are sorted by severity (Critical / Important / Minor), each tagged with its lens.
+  - Assign by concern: schema, constraints, and invariants → data; module boundaries → design; idioms, typing, tooling → python.
+  - Missing tooling is Important when it hides real defects.
+  - Each data finding, including side effects in the write path, is written as an event sequence.
+- **Self-review honesty:** never tick an item you haven't verified. Fetch and date product facts, or mark the item unticked and list it under "Not verified".
+- Load templates only when writing the document.
 
 **Task briefs (subagents).** Include only what the task touches: its module card (software-design), at most 5 Python rules that apply to it (clean-python), and the guarantee it must preserve (data-intensive).
 
