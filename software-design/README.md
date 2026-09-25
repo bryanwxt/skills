@@ -52,14 +52,13 @@ Follow [`SETUP.md`](SETUP.md), which is the same in all three lenses. It covers 
 | `SKILL.md` | Always: role, the lens, quick rule, hook pointers, pointer to the audit flow |
 | `SETUP.md` | Wiring the lenses into a repo (shared by all three lenses) |
 | `scripts/check-superpowers.sh` | Checks the installed superpowers still has every anchor the lenses hook into (shared) |
-| `references/coordination.md` | Shared rules for all three lenses (questions, spec outline, plan order, tests, bounded changes, reviews); read once per session |
+| `references/coordination.md` | Shared core for all three lenses: installed-lenses rule, lanes, which step file to read, side effects, tests; read once per session |
 | `references/standalone.md` | Shared rules for standalone reviews and decisions: routing, joint reviews, flow, findings (shared by all three lenses) |
 | `references/audit.md` | The architecture audit flow |
-| `references/superpowers-hooks.md` | Step-by-step additions for each superpowers skill |
+| `references/steps/<step>.md` | One file per superpowers step: the shared rules plus a section per lens (the brainstorming file also holds the spec templates); identical in all three lenses |
 | `references/principles.md` | The design principles, condensed |
 | `references/red-flags.md` | Red flags, how to detect them in code, how to fix them |
 | `references/review-lens.md` | Appended to `PLAN_OR_REQUIREMENTS` for the final whole-branch or standalone review |
-| `assets/spec-sections.md` | Design subsections for a brainstorming spec, placed under its own headings |
 | `assets/audit-template.md` | Architecture audit output |
 
 ## Checking it works

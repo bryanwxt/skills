@@ -50,8 +50,8 @@ Installed lenses: software-design, clean-python, data-intensive
 - At every superpowers step (brainstorming, writing-plans, test-driven-development,
   subagent-driven-development / executing-plans, verification-before-completion,
   requesting- / receiving-code-review, systematic-debugging,
-  finishing-a-development-branch), load each installed lens and follow the section
-  of its `references/superpowers-hooks.md` for that step.
+  finishing-a-development-branch), read `references/coordination.md` once and the step's
+  `references/steps/<step>.md` (one copy each, from any installed lens).
 - A lens not listed above isn't installed: skip its rules.
 
 ### Repo facts for the lenses

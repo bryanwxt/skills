@@ -38,16 +38,20 @@ The isolation is the same as `../run.sh` (headless `claude -p`, no user settings
 
 ## Results: September 2026 (Sonnet answers, Opus judge, superpowers 6.4.1, 5 runs per arm)
 
-| Task | Where the arms differ (bare → lens) | Same in both | Cost (median, bare → lens) |
+After replacing lens examples that matched the fixtures (see the lens repo history), with the per-step file layout:
+
+| Task | Rubric items hit, bare → lens | Where they differ | Cost (median), bare → lens |
 |---|---|---|---|
-| v1 design | Stripe isolated behind one module 2/5 → **5/5**; race/idempotency tested on a real DB 4/5 → 5/5 | concurrency, retries, email, migration: 5/5 | $0.09 → $0.18; 26 s → 41 s; 581 → 655 words |
-| v2 review | false positives 0 → 2 (one a stale Postgres fact not from the lens files) | all 8 planted defects: 5/5 in both arms | $0.07 → $0.08; 825 → 885 words |
-| v3 debug | regression test with two deliveries on a real DB 1/5 → **5/5** | the right cause and a database-level fix: 5/5 | $0.06 → $0.12; 16 s → 19 s |
-| v4 bounded | validates `--limit` 3/5 → 5/5; plans a test 2/5 → 5/5; clarifying questions asked 4/5 runs → 0/5 | stays in scope: 5/5 | $0.06 → $0.09; 173 → 350 words |
+| v1 design (gift cards) | 5.6 → **6** of 6 | Stripe isolated in one module 1/5 → 5/5 (with no example naming it); race tests on a real DB | $0.09 → $0.17 |
+| v1b design (clinic booking) | 5.6 → **6** of 6 | calendar isolation and real-DB tests | $0.09 → $0.18 |
+| v2 review | 8 → 8 of 8 | none: both arms find every planted defect (the fixture is too easy) | $0.07 → $0.08 |
+| v3 debug | 5.2 → **6** of 6 | real-DB regression test with two deliveries | $0.06 → $0.11 |
+| v4 bounded (purpose given) | 3 → 3 of 3 | none; same length (318 vs 327 words) | $0.07 → $0.09 |
+
+With the purpose left out of the v4 request, both arms ask brainstorming's purpose question (lens 5/5 runs, bare 3–5/5).
 
 **Reading it:**
-- The lenses add what Sonnet doesn't volunteer: isolating a dependency behind one module, correctness tests on a real database, input validation and a test plan on small changes.
-- They don't help where Sonnet already hits the ceiling. Every planted review defect and the debugging root cause were found in both arms, so v2's fixture is too easy to show a difference.
-- They cost about 1.1–2× per step, and double the length of short bounded replies.
-- They replace clarifying questions with stated defaults. That's their rule, but whether it's better depends on the person.
-- n = 5 per arm, one fixture set, one answer model.
+- The lenses add the things Sonnet doesn't volunteer on design and debugging work: isolating a dependency behind one module, and correctness tests against a real database. That holds on a second domain too.
+- They add nothing where Sonnet is already at the ceiling (the review fixture), and nothing on small changes except a little cost.
+- Cost is about 1.8–1.9× on design and debugging steps. Most of it is extra turns, because headless runs read one file per turn. Fewer, larger files cost less than many small ones.
+- n = 5 per arm, Sonnet only, two design domains, mostly Python/Postgres.

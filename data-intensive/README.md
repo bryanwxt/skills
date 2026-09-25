@@ -57,16 +57,15 @@ Follow [`SETUP.md`](SETUP.md), which is the same in all three lenses. It covers 
 | `SKILL.md` | Always: ground rules, quick rule, hook pointers, pointer to Flows A and B |
 | `SETUP.md` | Wiring the lenses into a repo (shared by all three lenses) |
 | `scripts/check-superpowers.sh` | Checks the installed superpowers still has every anchor the lenses hook into (shared) |
-| `references/coordination.md` | Shared rules for all three lenses (questions, spec outline, plan order, tests, bounded changes, reviews); read once per session |
+| `references/coordination.md` | Shared core for all three lenses: installed-lenses rule, lanes, which step file to read, side effects, tests; read once per session |
 | `references/standalone.md` | Shared rules for standalone reviews and decisions: routing, joint reviews, flow, findings (shared by all three lenses) |
 | `references/flows.md` | Flow A (technology choice) and Flow B (data architecture or incident review) |
-| `references/superpowers-hooks.md` | The data track for brainstorming and additions to every other superpowers step |
+| `references/steps/<step>.md` | One file per superpowers step: the shared rules plus a section per lens (the brainstorming file also holds the spec templates); identical in all three lenses |
 | `references/question-bank.md` | Questions with recommended defaults for design, tech choice, review |
 | `references/foundations.md` … `derived-data.md` | Topic knowledge (models, storage, encoding, replication, partitioning, transactions, distributed systems, pipelines) |
 | `references/decision-guides.md` | Trade-off tables for technology choices |
 | `references/review-checklist.md` | Review questions; symptom → cause → fix table |
 | `references/review-lens.md` | Appended to `PLAN_OR_REQUIREMENTS` for the final whole-branch or standalone review when the diff touches data |
-| `assets/spec-sections.md` | Data subsections for a brainstorming spec, placed under its own headings |
 | `assets/decision-record-template.md` | Technology decision records |
 | `assets/review-template.md` | Data architecture / incident reviews |
 
