@@ -34,7 +34,7 @@ skill-name/
 - one combined check for small changes;
 - joint reviews.
 
-The three copies must stay identical. Check with:
+Each lens also ships the same `SETUP.md` (how to wire the lenses into a repo) and `scripts/check-superpowers.sh` (confirms the installed superpowers still has every hook point). All shared files must stay identical. Check with:
 
 ```bash
 scripts/check-coordination.sh

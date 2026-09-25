@@ -1,6 +1,6 @@
 ---
 name: clean-python
-description: 'Python lens for superpowers workflows, based on Mariano Anaya''s "Clean Code in Python": Pythonic idioms and protocols, typing, error handling, SOLID in Python, decorators, descriptors, generators and async, pytest, mocks, and tooling (formatter, linter, type checker). Use it whenever superpowers work touches Python code, in brainstorming, writing-plans, test-driven-development with pytest, plan execution, verification, systematic-debugging, and code review. Also use it when asked to review or judge Python code outside a commit range. It never runs its own process.'
+description: 'Use when superpowers work (brainstorming, planning, TDD with pytest, execution, verification, debugging, code review) touches Python code; when asked whether Python code is Pythonic, well typed, or well tested; or when the repo''s CLAUDE.md lists clean-python as an installed lens. Based on Anaya''s "Clean Code in Python".'
 ---
 
 # Clean Python (superpowers lens)

@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
-# Verifies references/coordination.md is identical in the three superpowers lens skills. Run from the repo root.
+# Verifies the files shared by the three superpowers lens skills are identical. Run from the repo root.
 set -euo pipefail
-files=(software-design/references/coordination.md
-       clean-python/references/coordination.md
-       data-intensive/references/coordination.md)
+lenses=(software-design clean-python data-intensive)
+shared=(references/coordination.md SETUP.md scripts/check-superpowers.sh)
 status=0
-for f in "${files[@]:1}"; do
-  if ! cmp -s "${files[0]}" "$f"; then echo "DRIFT: $f differs from ${files[0]}"; diff "${files[0]}" "$f" || true; status=1; fi
+for s in "${shared[@]}"; do
+  for l in "${lenses[@]:1}"; do
+    if ! cmp -s "${lenses[0]}/$s" "$l/$s"; then
+      echo "DRIFT: $l/$s differs from ${lenses[0]}/$s"; diff "${lenses[0]}/$s" "$l/$s" || true; status=1
+    fi
+  done
 done
-[ $status -eq 0 ] && echo "OK: coordination.md identical in ${#files[@]} skills"
+[ $status -eq 0 ] && echo "OK: ${shared[*]} identical in ${#lenses[@]} skills"
 exit $status

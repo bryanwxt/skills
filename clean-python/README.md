@@ -29,21 +29,15 @@
 
 ## Setup
 
-1. Install superpowers from [obra/superpowers-marketplace](https://github.com/obra/superpowers-marketplace).
-2. Install this skill, plus `software-design` if you want the module-design lens too (copy each folder to your skills directory, e.g. `~/.claude/skills/`).
-3. Optional, in `CLAUDE.md`:
-   ```markdown
-   - When superpowers work touches Python, also use the clean-python skill as the
-     Python lens (see its references/superpowers-hooks.md). Module decomposition
-     is software-design's call; Python idioms, typing, tests and tooling are
-     clean-python's.
-   ```
+Follow [`SETUP.md`](SETUP.md), which is the same in all three lenses. It covers requiring superpowers in the repo's `.claude/settings.json`, copying the lenses into `.claude/skills/`, the shared CLAUDE.md block (installed lenses plus repo facts), and `scripts/check-superpowers.sh`, which confirms the installed superpowers still has every hook point the lenses rely on.
 
 ## Files
 
 | File | Used when |
 |---|---|
 | `SKILL.md` | Always: role, lanes, hook table, the standalone-review procedure |
+| `SETUP.md` | Wiring the lenses into a repo (shared by all three lenses) |
+| `scripts/check-superpowers.sh` | Checks the installed superpowers still has every anchor the lenses hook into (shared) |
 | `references/coordination.md` | Shared rules for all three lenses (questions, spec outline, plan order, tests, bounded changes, reviews); read once per session |
 | `references/superpowers-hooks.md` | Step-by-step additions for each superpowers skill |
 | `references/pythonic.md` | Writing or reviewing Python idioms |
