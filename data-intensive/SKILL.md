@@ -5,12 +5,7 @@ description: 'Use when work involves data guarantees, scale, or concurrency: cho
 
 # Data-Intensive (superpowers lens)
 
-This lens judges what guarantees each component gives, what they cost, and what happens when things fail. Superpowers owns the build process. This skill runs two flows of its own, technology choices and data reviews, using the shared standalone discipline.
-
-**Lanes**
-- **data-intensive:** which store owns each piece of data, which guarantee each operation needs, how data flows, replicates, partitions and evolves, and what happens on failure.
-- **software-design:** which module hides those choices.
-- **clean-python:** the Python that enforces them.
+This lens judges what guarantees each component gives, what they cost, and what happens when things fail. Superpowers owns the build process. This skill runs two flows of its own: technology choices (Flow A) and data architecture or incident reviews (Flow B).
 
 ## Ground rules
 1. **Workload first.** Get the load parameters: reads and writes per second, data size and growth, fan-out and hot keys, p99 targets, and the cost of each kind of failure. Without numbers, give no scaling advice; state your assumptions instead.
@@ -38,43 +33,9 @@ Build it from installed lenses only, as `coordination.md` shows (e.g. only clean
 
 Read `references/coordination.md` once per session; it's shared by all three lenses. Then read the section of `references/superpowers-hooks.md` for the current step. **Designing a data architecture from scratch** is brainstorming's architectural path plus the data track in the hooks file; stop after the approved spec if the user wants only the design. For spec content, use `assets/spec-sections.md`. For the final whole-branch or a standalone reviewer, use `references/review-lens.md` (per-task reviewers get lens rules only through the plan's Global Constraints).
 
-## Flow A: technology choice
-Use this for "Postgres or DynamoDB?", "Kafka or SQS?", "Avro or Protobuf?", and similar. Announce the path first:
-- **Quick:** reversible and low-stakes. Answer in chat: recommendation, trade-off, when to revisit.
-- **Decision:** hard to reverse.
-- **Spike:** a measurement decides it. Propose a throwaway benchmark in 2–3 sentences, get a nod, run it cheaply, then continue on the decision path.
+## Flows A and B (the flows this skill starts)
 
-The decision path follows the coordination file's standalone flow:
-1. **Questions** from `references/question-bank.md` §2: access patterns, non-negotiable guarantees, operational model, existing stack, horizon.
-2. **Compare categories before products** (`references/decision-guides.md`). Keep 2–3 options, recommendation first.
-3. **Check product facts** in current docs, and cite them with dates.
-4. **Write the record** with `assets/decision-record-template.md` to `docs/superpowers/decisions/`. It covers:
-   - fit to the workload;
-   - failure behaviour of each option;
-   - operational cost;
-   - exit cost;
-   - "revisit when".
-
-   Adoption is handed to brainstorming.
-
-## Flow B: data architecture or incident review
-Use this for "review our data flow", "what could go wrong with this pipeline", and post-incident analysis. A live incident goes to `superpowers:systematic-debugging` instead. Choose a path: **targeted** (one flow or incident) or **full**. Then follow the coordination file's standalone flow:
-1. **Questions** from `references/question-bank.md` §3.
-2. **Map** components, the system of record for each entity, dataflows with the guarantee each link actually provides, the isolation level (read from config), replication, and partitioning. Add a timeline for incidents.
-3. **Walk it** with `references/review-checklist.md`, by blast radius: loss and corruption → correctness anomalies → availability → performance → operability. Look hardest for:
-   - dual writes and side effects in the write path;
-   - check-then-act races;
-   - ordering by wall clock;
-   - missing idempotency;
-   - locks without fencing;
-   - assumed isolation levels.
-4. **Severity:**
-   - Critical: loss, silent corruption, broken invariants.
-   - Important: problems that show up under load or failure.
-   - Minor: everything else.
-
-   Every data finding is written as an event sequence.
-5. **Write** with `assets/review-template.md` to `docs/superpowers/reviews/YYYY-MM-DD-<topic>-data-review.md`. Hand each fix off to brainstorming.
+For a technology choice ("Postgres or DynamoDB?", "Kafka or SQS?", "Avro or Protobuf?"), or a review of a data architecture, pipeline or past incident, follow `references/flows.md`. A live incident goes to `superpowers:systematic-debugging` instead.
 
 **Topic references** (load when needed):
 - `foundations.md`
