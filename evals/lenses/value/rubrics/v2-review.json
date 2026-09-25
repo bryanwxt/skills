@@ -1,0 +1,12 @@
+{"context": "Code review of a diff with 8 planted defects. The diff is at the fixture path.",
+ "items": {
+  "D1": "Check-then-act race: the SELECT then UPDATE lets two concurrent redemptions both succeed under READ COMMITTED (needs FOR UPDATE, a conditional UPDATE ... WHERE redeemed_by IS NULL, or a constraint).",
+  "D2": "Mutable default argument `tags=[]` in redeem() is shared across calls.",
+  "D3": "Bare `except:` in the route swallows every error (including bugs and AlreadyRedeemed/UnknownCode distinctions) and returns a generic failure.",
+  "D4": "GiftCardManager is a pass-through layer that adds nothing over GiftCardService.",
+  "D5": "The migration adds a NOT NULL column with no default to a 12M-row table: it fails on existing rows and/or rewrites/locks the table; redeemed_by should be nullable.",
+  "D6": "The email is sent inside the database transaction: it can go out even if the commit fails, and it holds the transaction open during a network call.",
+  "D7": "Tests mock the database, so the SQL, the transaction and the race are never exercised.",
+  "D8": "test_redeem_twice_raises can't fail: it catches Exception and never asserts that AlreadyRedeemed was raised."
+ },
+ "false_positives": true}

@@ -1,0 +1,10 @@
+{"context": "Debugging hypotheses for duplicate orders. True cause: SQS standard (at-least-once) redelivers the message when the handler exceeds the 30 s visibility timeout (fulfillment p99 28–40 s before ack), and the check-then-insert without a unique constraint on checkout_id lets the second delivery (or a concurrent worker) insert a duplicate.",
+ "items": {
+  "R1": "One of the top 2 hypotheses is duplicate delivery of the same message: SQS at-least-once / the visibility timeout expiring before the ack because fulfillment is slow.",
+  "R2": "Identifies the check-then-insert race / the missing unique constraint on orders.checkout_id as what lets a duplicate delivery become a duplicate order.",
+  "R3": "The fix enforces uniqueness in the database (unique constraint on checkout_id with INSERT ... ON CONFLICT or handling the integrity error), not only an application check, a longer timeout, or deduplication in memory.",
+  "R4": "The fix also addresses the redelivery side: ack/visibility-timeout handling (extend visibility, ack before slow work, or make fulfillment idempotent).",
+  "R5": "The regression test reproduces the duplicate by delivering the same event twice (or concurrently) against a real database.",
+  "R6": "Neither replica lag nor the Redis cache is ranked as the top hypothesis."
+ },
+ "false_positives": false}
