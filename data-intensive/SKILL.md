@@ -1,6 +1,6 @@
 ---
 name: data-intensive
-description: 'Data-systems lens for superpowers workflows, based on Martin Kleppmann''s "Designing Data-Intensive Applications": data models and stores, storage engines, encoding and schema evolution, replication, partitioning, transactions and isolation, distributed failures, clocks, consensus, batch and stream pipelines, CDC, and end-to-end correctness. Use it when work involves data guarantees, scale, or concurrency. That covers designing a data architecture from scratch (through superpowers:brainstorming); choosing a database, queue, or data format; reviewing a data architecture or an incident; and supplying data concerns inside superpowers'' planning, TDD, debugging, and code-review steps. Don''t use it for ordinary CRUD with no scale, concurrency, or consistency concern.'
+description: 'Use when work involves data guarantees, scale, or concurrency: choosing a database, queue, or data format; designing or reviewing a data architecture, pipeline, or incident; or superpowers steps touching schemas, migrations, transactions, queues, caches, replication, or races. Not for plain CRUD with no scale, concurrency, or consistency concern. Based on Kleppmann''s "Designing Data-Intensive Applications".'
 ---
 
 # Data-Intensive (superpowers lens)

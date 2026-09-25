@@ -48,21 +48,15 @@ The three lenses answer different questions. Superpowers runs the process for al
 
 ## Setup
 
-1. Install superpowers from [obra/superpowers-marketplace](https://github.com/obra/superpowers-marketplace).
-2. Copy `data-intensive/` (and `software-design/`, `clean-python/` if wanted) to your skills directory, e.g. `~/.claude/skills/`.
-3. Optional, in `CLAUDE.md`:
-   ```markdown
-   - When work involves data guarantees, scale, concurrency, schema changes,
-     messaging, or multiple stores, use data-intensive as the data lens alongside
-     superpowers (see its references/superpowers-hooks.md). Technology choices
-     and data architecture reviews run through data-intensive's own flows.
-   ```
+Follow [`SETUP.md`](SETUP.md), which is the same in all three lenses. It covers requiring superpowers in the repo's `.claude/settings.json`, copying the lenses into `.claude/skills/`, the shared CLAUDE.md block (installed lenses plus repo facts), and `scripts/check-superpowers.sh`, which confirms the installed superpowers still has every hook point the lenses rely on.
 
 ## Files
 
 | File | Used when |
 |---|---|
 | `SKILL.md` | Always: flows, lanes, ground rules, brainstorming discipline |
+| `SETUP.md` | Wiring the lenses into a repo (shared by all three lenses) |
+| `scripts/check-superpowers.sh` | Checks the installed superpowers still has every anchor the lenses hook into (shared) |
 | `references/coordination.md` | Shared rules for all three lenses (questions, spec outline, plan order, tests, bounded changes, reviews); read once per session |
 | `references/superpowers-hooks.md` | The data track for brainstorming and additions to every other superpowers step |
 | `references/question-bank.md` | Questions with recommended defaults for design, tech choice, review |
