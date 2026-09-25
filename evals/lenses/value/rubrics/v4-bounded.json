@@ -1,0 +1,7 @@
+{"context": "Chat reply to a small bounded request: add --limit to an existing click command. Good replies are short and specific; bad replies over-scope.",
+ "items": {
+  "G1": "Validates the limit (e.g. click.IntRange(min=1) or rejects zero/negative values), or states the behaviour for invalid values.",
+  "G2": "Plans a test for the new option (e.g. with CliRunner and the fake repo).",
+  "G3": "Stays in scope: proposes nothing beyond the --limit option itself (no new abstractions, refactors, tooling changes, offset/pagination or other extra options). True means it stayed in scope."
+ },
+ "false_positives": false}

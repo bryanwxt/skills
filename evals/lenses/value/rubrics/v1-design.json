@@ -1,0 +1,10 @@
+{"context": "Design write-up for gift card redemption with 6 planted hazards in the requirements.",
+ "items": {
+  "H1": "Concurrent redemption is made safe by a database mechanism, named explicitly: a unique constraint, a row lock (SELECT ... FOR UPDATE), or an atomic conditional UPDATE (e.g. WHERE redeemed_by IS NULL). An application-level check alone doesn't count.",
+  "H2": "Client retries are made idempotent: a request/idempotency key is persisted and enforced (e.g. unique) so a retried redeem returns the original result instead of failing or double-processing.",
+  "H3": "The confirmation email is not sent inside the database transaction: an outbox, or sending after commit with the delivery semantics stated (at-least-once / at-most-once).",
+  "H4": "The change to the 12M-row gift_cards table is done safely: add the column nullable (or with a non-blocking default), backfill in batches, or expand → migrate → contract. Must address locking/rewrite or existing rows, not just 'add a column'.",
+  "H5": "Stripe access is isolated behind one module/interface used by both redemption and admin refunds, so the SDK isn't called from several places.",
+  "H6": "The concurrency or idempotency behaviour is tested against a real Postgres (e.g. two connections interleaved), not only with mocks."
+ },
+ "false_positives": false}
