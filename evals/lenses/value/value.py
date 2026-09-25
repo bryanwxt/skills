@@ -15,6 +15,8 @@ import statistics
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+NAMES = {"v1": "v1-design", "v1b": "v1b-design", "v2": "v2-review", "v3": "v3-debug", "v4": "v4-bounded"}
+FIXTURE = {"v1": "", "v1b": "", "v2": "v2-diff.md", "v3": "v3-incident.md", "v4": "v4-cli.md"}
 LENSES = ("software-design", "clean-python", "data-intensive")
 ARMS = ("bare", "lens")
 
@@ -32,29 +34,21 @@ def read_block(task, arm, sp, root):
         "v2": ["requesting-code-review/code-reviewer.md"],
         "v3": ["systematic-debugging/SKILL.md"],
         "v4": ["brainstorming/SKILL.md"],
-    }[task]
+    }["v1" if task == "v1b" else task]
     lines = [f"- {sp}/{f}" for f in sp_files]
-    if arm == "lens":
-        if task == "v1":
-            lines.append(f"- {root}/software-design/references/coordination.md (shared by the lenses; read this one copy)")
-            for l in LENSES:
-                lines += [f"- {root}/{l}/SKILL.md", f"- {root}/{l}/references/superpowers-hooks.md (the brainstorming and writing-plans sections)",
-                          f"- {root}/{l}/assets/spec-sections.md"]
-        elif task == "v3":
-            lines.append(f"- {root}/software-design/references/coordination.md (shared by the lenses; read this one copy)")
-            for l in LENSES:
-                lines += [f"- {root}/{l}/SKILL.md", f"- {root}/{l}/references/superpowers-hooks.md (the systematic-debugging section)"]
-        elif task == "v4":
-            lines += [f"- {root}/{l}/SKILL.md" for l in LENSES]
+    if arm == "lens" and task != "v2":
+        step = {"v1": "brainstorming and writing-plans", "v1b": "brainstorming and writing-plans",
+                "v3": "systematic-debugging", "v4": "brainstorming (a bounded change)"}[task]
+        lines += [f"- {root}/{l}/SKILL.md" for l in LENSES]
+        lines.append(f"  (lens skills: start from each SKILL.md and open the files it points to for {step})")
     return "\n".join(lines)
 
 
 def prepare(out, sp, root, tasks):
     os.makedirs(os.path.join(out, "prompts"), exist_ok=True)
     header = open(os.path.join(HERE, "tasks", "header.md")).read()
-    names = {"v1": "v1-design", "v2": "v2-review", "v3": "v3-debug", "v4": "v4-bounded"}
     for task in tasks:
-        body = open(os.path.join(HERE, "tasks", names[task] + ".md")).read()
+        body = open(os.path.join(HERE, "tasks", NAMES[task] + ".md")).read()
         for arm in ARMS:
             lens_review = ""
             if task == "v2" and arm == "lens":
@@ -92,7 +86,7 @@ def extract(out):
 
 
 REDACT = [r"software-design", r"clean-python", r"data-intensive", r"^.*Lens check:.*$", r"\blens(es)?\b",
-          r"Ousterhout", r"Kleppmann", r"Anaya", r"coordination\.md", r"superpowers-hooks\.md", r"review-lens\.md",
+          r"Ousterhout", r"Kleppmann", r"Anaya", r"coordination\.md", r"superpowers-hooks\.md", r"references/hooks/[\w.-]+", r"references/steps/[\w.-]+", r"review-lens\.md",
           r"spec-sections\.md", r"Philosophy of Software Design", r"Designing Data-Intensive Applications", r"Clean Code in Python"]
 
 
@@ -112,8 +106,8 @@ def blind(out):
         key[rid] = run
         answer = os.path.join(jdir, rid + ".answer.md")
         open(answer, "w").write(text)
-        rubric = json.load(open(os.path.join(HERE, "rubrics", {"v1": "v1-design", "v2": "v2-review", "v3": "v3-debug", "v4": "v4-bounded"}[task] + ".json")))
-        fixture = {"v1": "", "v2": "v2-diff.md", "v3": "v3-incident.md", "v4": "v4-cli.md"}[task]
+        rubric = json.load(open(os.path.join(HERE, "rubrics", NAMES[task] + ".json")))
+        fixture = FIXTURE[task]
         prompt = render(template,
                         CONTEXT=rubric["context"],
                         FIXTURE=(f"The material the answer is about: {os.path.join(HERE, 'fixtures', fixture)}" if fixture else "There is no separate material; the rubric describes the request."),
@@ -147,7 +141,7 @@ def summarize(out):
         rows.setdefault((task, arm), []).append((run, json.load(open(meta_path)), g.get(run)))
     report = []
     for task in sorted({t for t, _ in rows}):
-        rubric = json.load(open(os.path.join(HERE, "rubrics", {"v1": "v1-design", "v2": "v2-review", "v3": "v3-debug", "v4": "v4-bounded"}[task] + ".json")))
+        rubric = json.load(open(os.path.join(HERE, "rubrics", NAMES[task] + ".json")))
         items = list(rubric["items"])
         report.append(f"\n## {task}: {rubric['context']}\n")
         report.append("| item | " + " | ".join(ARMS) + " |")

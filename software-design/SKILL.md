@@ -26,22 +26,19 @@ Don't open the reference files. In the one-line lens check, write `design ok` un
 
 Put pre-existing design debt under follow-ups.
 
-After the change, end with this exact line (the lens check), shared by all three lenses:
-`Lens check: design <ok|note> · python <ok|note> · data <ok|note>`
-Build it from installed lenses only, as `coordination.md` shows (e.g. only clean-python installed → `Lens check: python ok`); drop python if no .py file changed and data if no data changed; write "ok" only if that lens flags nothing. Add no questions of your own: state lens decisions as defaults under **Defaults chosen**.
+After every code change, including debugging fixes, end with the lens-check line. Its segments, in this order: `design` if software-design is installed; `python` if clean-python is installed and a .py file changed; `data` if data-intensive is installed and data changed. Write "ok" only if that lens flags nothing. E.g. only clean-python installed → `Lens check: python ok`; all three installed, a .py change, no data → `Lens check: design ok · python ok`.
+
+Lenses add no questions, and they don't replace brainstorming's. When the request doesn't say what the change is for, brainstorming's first message is its one purpose question and nothing else; lens defaults wait for the design message. In the design, list at most 3 lens defaults the user might not expect under **Defaults chosen**, or leave the list out.
 
 ## Inside superpowers steps
 
-Read `references/coordination.md` once per session; it's shared by all three lenses. Then read the section of `references/superpowers-hooks.md` for the current step:
-- brainstorming (context, questions, approaches, module cards, self-review);
-- writing-plans;
-- TDD;
-- execution;
-- review;
-- debugging;
-- finishing.
+When brainstorming classifies the request as bounded or a spike, the quick rule above is all this lens needs: open no reference files for it. Otherwise, at each superpowers step, read two files, one copy each from any lens:
+- `references/coordination.md`, the first time only;
+- that step's file: `references/steps/brainstorming.md`, `writing-plans.md`, `tdd.md`, `execution.md`, `verification.md`, `review.md`, `debugging.md` or `finishing.md`.
 
-For spec content, use `assets/spec-sections.md`. For the final whole-branch or a standalone reviewer, use `references/review-lens.md` (per-task reviewers get lens rules only through the plan's Global Constraints).
+Each step file has the shared rules and a section per lens; skip lenses that aren't installed.
+
+For the final whole-branch or a standalone reviewer, use `references/review-lens.md` (per-task reviewers get lens rules only through the plan's Global Constraints).
 
 ## Architecture audit (the one flow this skill starts)
 

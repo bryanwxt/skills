@@ -1,7 +1,7 @@
 You are the controller running superpowers:subagent-driven-development. Do not invoke any skills; read files directly.
 
 Read {{SUPERPOWERS}}/subagent-driven-development/SKILL.md, its implementer-prompt.md and task-reviewer-prompt.md.
-Lens skills active in this session (read SKILL.md, references/coordination.md, references/superpowers-hooks.md in each):
+Lens skills active in this session (start from SKILL.md in each and open the files it points to for this step):
 {{LENS_DIRS}}
 Plan being executed: {{FIXTURES}}/giftcard-plan.md
 

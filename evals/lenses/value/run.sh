@@ -2,7 +2,7 @@
 # A/B value eval: the same tasks with bare superpowers vs superpowers plus the lenses,
 # graded by a blind judge against rubrics of planted problems.
 # Usage: bash evals/lenses/value/run.sh [-n reps] [-m model] [-J judge-model] [-j parallel] [task ...]
-#   tasks: v1 (design) v2 (review) v3 (debug) v4 (bounded change); default: all
+#   tasks: v1, v1b (design) v2 (review) v3 (debug) v4 (bounded change); default: all
 set -euo pipefail
 
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -21,7 +21,7 @@ while getopts "n:m:J:j:" o; do
   case $o in n) reps=$OPTARG;; m) model=$OPTARG;; J) judge=$OPTARG;; j) jobs=$OPTARG;; *) exit 2;; esac
 done
 shift $((OPTIND-1))
-tasks=("$@"); [ ${#tasks[@]} -eq 0 ] && tasks=(v1 v2 v3 v4)
+tasks=("$@"); [ ${#tasks[@]} -eq 0 ] && tasks=(v1 v1b v2 v3 v4)
 
 command -v claude >/dev/null || { echo "needs the claude CLI"; exit 1; }
 SP=$(bash "$ROOT/software-design/scripts/check-superpowers.sh" | sed -n 's/^superpowers: //p')

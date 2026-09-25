@@ -38,16 +38,15 @@ Follow [`SETUP.md`](SETUP.md), which is the same in all three lenses. It covers 
 | `SKILL.md` | Always: role, quick rule, hook pointers, pointer to the Python review flow |
 | `SETUP.md` | Wiring the lenses into a repo (shared by all three lenses) |
 | `scripts/check-superpowers.sh` | Checks the installed superpowers still has every anchor the lenses hook into (shared) |
-| `references/coordination.md` | Shared rules for all three lenses (questions, spec outline, plan order, tests, bounded changes, reviews); read once per session |
+| `references/coordination.md` | Shared core for all three lenses: installed-lenses rule, lanes, which step file to read, side effects, tests; read once per session |
 | `references/standalone.md` | Shared rules for standalone reviews and decisions: routing, joint reviews, flow, findings (shared by all three lenses) |
 | `references/python-review.md` | The standalone Python review flow |
-| `references/superpowers-hooks.md` | Step-by-step additions for each superpowers skill |
+| `references/steps/<step>.md` | One file per superpowers step: the shared rules plus a section per lens (the brainstorming file also holds the spec templates); identical in all three lenses |
 | `references/pythonic.md` | Writing or reviewing Python idioms |
 | `references/design.md` | Contracts, errors, SOLID, patterns in Python |
 | `references/testing.md` | pytest, mocks, coverage, property/mutation testing, refactoring |
 | `references/review-checklist.md` | Full Python review |
 | `references/review-lens.md` | Appended to `PLAN_OR_REQUIREMENTS` for the final whole-branch or standalone review |
-| `assets/spec-sections.md` | Python subsections for a brainstorming spec, placed under its own headings |
 | `assets/pyproject-tooling.toml` | Starter tool config when a project has none |
 
 ## Checking it works

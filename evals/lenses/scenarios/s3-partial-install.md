@@ -1,6 +1,6 @@
 You are simulating an agent using the superpowers workflow with exactly ONE lens skill installed. Do not invoke any skills; read files directly.
 
-Installed lens (read SKILL.md, references/coordination.md, references/superpowers-hooks.md, assets/spec-sections.md):
+Installed lens (start from SKILL.md and open the files it points to for the steps involved):
 {{LENS_DIRS}}
 No other lens is installed.
 Superpowers: read brainstorming/SKILL.md and writing-plans/SKILL.md under {{SUPERPOWERS}}

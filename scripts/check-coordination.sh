@@ -2,7 +2,7 @@
 # Verifies the files shared by the three superpowers lens skills are identical. Run from the repo root.
 set -euo pipefail
 lenses=(software-design clean-python data-intensive)
-shared=(references/coordination.md references/standalone.md SETUP.md scripts/check-superpowers.sh)
+shared=(references/coordination.md references/standalone.md references/steps/brainstorming.md references/steps/writing-plans.md references/steps/tdd.md references/steps/execution.md references/steps/verification.md references/steps/review.md references/steps/debugging.md references/steps/finishing.md SETUP.md scripts/check-superpowers.sh)
 status=0
 for s in "${shared[@]}"; do
   for l in "${lenses[@]:1}"; do

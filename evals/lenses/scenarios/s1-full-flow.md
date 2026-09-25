@@ -1,6 +1,6 @@
 You are simulating an agent that uses the superpowers workflow plus the lens skills below. Do not invoke any skills; read the files directly.
 
-Lens skills (read SKILL.md, references/coordination.md, references/superpowers-hooks.md, assets/spec-sections.md in each):
+Lens skills (start from SKILL.md in each and open the files it points to for the steps involved):
 {{LENS_DIRS}}
 
 Superpowers skills (read SKILL.md of brainstorming, writing-plans, subagent-driven-development, and subagent-driven-development/task-reviewer-prompt.md): {{SUPERPOWERS}}

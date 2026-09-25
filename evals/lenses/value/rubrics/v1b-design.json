@@ -1,0 +1,10 @@
+{"context": "Design write-up for clinic appointment booking with 6 planted hazards in the requirements.",
+ "items": {
+  "H1": "Double booking of a slot is prevented by a database mechanism, named explicitly: a unique constraint (e.g. on clinician + slot), an exclusion constraint, a row lock (SELECT ... FOR UPDATE), or an atomic conditional insert/update. An application-level check alone doesn't count.",
+  "H2": "Client retries are made idempotent: a request/idempotency key is persisted and enforced (e.g. unique) so a retried booking returns the original result instead of failing or double-booking.",
+  "H3": "The SMS is not sent inside the database transaction: an outbox, or sending after commit with the delivery semantics stated (at-least-once / at-most-once).",
+  "H4": "The change to the 8M-row appointments table is done safely: add the column nullable (or with a non-blocking default), backfill in batches, or expand → migrate → contract. Must address locking/rewrite or existing rows, not just 'add a column'.",
+  "H5": "Google Calendar access is isolated behind one module/interface used by both booking and admin cancellation, so the calendar API isn't called from several places.",
+  "H6": "The double-booking or idempotency behaviour is tested against a real Postgres (e.g. two connections interleaved), not only with mocks."
+ },
+ "false_positives": false}
