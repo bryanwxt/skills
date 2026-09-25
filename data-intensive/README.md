@@ -54,10 +54,12 @@ Follow [`SETUP.md`](SETUP.md), which is the same in all three lenses. It covers 
 
 | File | Used when |
 |---|---|
-| `SKILL.md` | Always: flows, lanes, ground rules, brainstorming discipline |
+| `SKILL.md` | Always: ground rules, quick rule, hook pointers, pointer to Flows A and B |
 | `SETUP.md` | Wiring the lenses into a repo (shared by all three lenses) |
 | `scripts/check-superpowers.sh` | Checks the installed superpowers still has every anchor the lenses hook into (shared) |
 | `references/coordination.md` | Shared rules for all three lenses (questions, spec outline, plan order, tests, bounded changes, reviews); read once per session |
+| `references/standalone.md` | Shared rules for standalone reviews and decisions: routing, joint reviews, flow, findings (shared by all three lenses) |
+| `references/flows.md` | Flow A (technology choice) and Flow B (data architecture or incident review) |
 | `references/superpowers-hooks.md` | The data track for brainstorming and additions to every other superpowers step |
 | `references/question-bank.md` | Questions with recommended defaults for design, tech choice, review |
 | `references/foundations.md` … `derived-data.md` | Topic knowledge (models, storage, encoding, replication, partitioning, transactions, distributed systems, pipelines) |

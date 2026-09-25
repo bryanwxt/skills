@@ -5,6 +5,11 @@ These rules apply whenever software-design, clean-python or data-intensive is ac
 
 **Installed lenses only.** A repo may install any subset of the three. Every rule below that names a lens applies only if that lens is installed: skip its questions, approach lines, spec subsections, plan-slot lines and lens-check segment. Don't write "n/a" for a missing lens, and don't stand in for it.
 
+**Lanes.**
+- **software-design:** how the system splits into modules, what each hides, and what the interfaces are. A module card says which module hides each data choice.
+- **clean-python:** how those modules are written in Python (Protocols, dataclasses, typed signatures, the exception hierarchy), including the Python that enforces data guarantees (transaction retry loops, session handling, idempotency checks).
+- **data-intensive:** which store owns each piece of data, which guarantee each operation needs, how data flows, replicates, partitions and evolves, and what happens on failure.
+
 **Questions**
 - Lens questions join brainstorming's queue: one per message, **at most 6 across all lenses**. Ask only when the answer changes the design; anything else becomes an assumption in the write-back. Skip whatever the context already answers.
 - **Choice** (approach, guarantee to pay for, path): put the recommended option first, with its reason.
@@ -85,24 +90,7 @@ Every task ends with its verification commands. List every deviation from the ap
 - Pre-existing problems go under follow-ups.
 - Don't open lens reference files; each SKILL.md has a quick rule for this.
 
-**Standalone reviews and decisions**
-- **Routing:**
-  - structure → software-design audit;
-  - Python file or snippet → clean-python review;
-  - data flows, stores or an incident → data-intensive review;
-  - technology choice → data-intensive decision;
-  - anything spanning lenses → **one** joint review.
-- **Joint reviews:** load each covered lens with the Skill tool, and use the union of their templates' self-review items.
-- **Flow:** announce the path → questions (budget, choice vs fact) → post the write-back **in chat** with the four labels, in the same message that says the document is being written → write the document directly (no section-by-section or finding-by-finding approvals; only a short summary in chat) → self-review → one review gate → hand off to `superpowers:brainstorming`. Never implement in the flow.
-- **Location:** `docs/superpowers/{reviews,decisions}/YYYY-MM-DD-<topic>…md`. Commit on a branch.
-- **Findings:** sorted by severity (Critical / Important / Minor) and tagged `[data]`, `[design]` or `[python]`. Assign them by concern:
-  - schema, constraints, invariants → data;
-  - module boundaries → design;
-  - idioms, typing, tooling → python.
-
-  Missing tooling that hides defects is Important. Data findings, including side effects in the write path, are written as event sequences.
-- **Self-review:** check that findings are sorted Critical → Minor, and never tick something you haven't verified. Fetch and date product facts, or list them under "Not verified".
-- Load templates only when writing the document.
+**Standalone reviews and decisions** (audits, Python reviews, technology choices, data reviews): follow `references/standalone.md`.
 
 **Execution and review**
 - **Implementer:** both execution skills work from the plan task itself. subagent-driven-development's `task-brief` script extracts it verbatim, and the brief is the single source of requirements. Add nothing lens-specific to the dispatch. If a task lacks lens content it needs, treat it as a plan gap: rule on it and ledger it, as subagent-driven-development says for plan corrections.

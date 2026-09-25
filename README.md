@@ -32,7 +32,7 @@ skill-name/
 - where lens content goes in the plan (Global Constraints, Review Focus, each task), and one dependency order;
 - the test-double rule (real database for correctness tests, fakes for external services);
 - one combined check for small changes;
-- joint reviews.
+- joint reviews (in the shared `references/standalone.md`, loaded only for standalone reviews and decisions).
 
 Each lens also ships the same `SETUP.md` (how to wire the lenses into a repo) and `scripts/check-superpowers.sh` (confirms the installed superpowers still has every hook point). All shared files must stay identical. Check with:
 

@@ -7,11 +7,6 @@ description: 'Use when superpowers work (brainstorming, planning, TDD with pytes
 
 Superpowers owns the process. This lens owns the Python judgment: idioms, types, errors, tests, and tools. It writes Python only inside a superpowers implementation step.
 
-**Lanes**
-- **software-design:** module split and interfaces.
-- **clean-python:** how each module is written in Python, e.g. a `typing.Protocol`, dataclasses, typed signatures, docstrings, an exception hierarchy.
-- **data-intensive:** stores, guarantees, and dataflow. This lens writes the Python that enforces them: transaction retry loops, session handling, idempotency checks.
-
 **The lens**
 - Leave style to tools: formatter, linter, and type checker, run in CI.
 - Use the language's protocols (iteration, context managers, properties, dataclasses) instead of hand-rolling them.
@@ -45,24 +40,12 @@ Read `references/coordination.md` once per session; it's shared by all three len
 
 ## Python review (the one flow this skill starts)
 
-Use this for "is this Pythonic?" or "review this file or package" when there's no commit range. If the request also covers structure or data, run the joint review described in the coordination file.
-- **Quick path** (a snippet or short file): findings in chat, with before/after snippets. No document. Ask questions only if the intent is unclear.
-- **Full path** (a package, or when the fixes need planning): follow the coordination file's standalone flow, then:
-  1. Read for intent. Then walk `references/review-checklist.md` in this order: correctness hazards → design → idioms → docs and typing → tests → tooling. Style comes last, and only when no tool would catch it.
-  2. For each finding, give file:line, the problem, why it matters, a before/after snippet, and a severity:
-     - **Critical:** a bug, data loss, security, or a swallowed error.
-     - **Important:** a problem that will spread.
-     - **Minor:** a local issue.
-
-     Keep the review in proportion to the code, and credit what's good.
-  3. Write it with `assets/review-template.md` to `docs/superpowers/reviews/YYYY-MM-DD-<topic>-python-review.md`, then self-review, review gate, hand-off.
-
-  Tool claims need tool output.
+For "is this Pythonic?" or "review this file or package" with no commit range, follow `references/python-review.md`.
 
 **Guardrails**
 - Follow the project's own conventions and tools over this skill's defaults.
 - Don't spend review comments on what a tool catches; recommend the tool instead.
-- Refactors preserve behaviour, and go in their own green tasks.
+- Refactors preserve behaviour and are green before behaviour changes.
 
 **Deeper references:**
 - `references/pythonic.md`: idioms, protocols, decorators, descriptors, generators, async, gotchas.
