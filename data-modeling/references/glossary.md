@@ -1,0 +1,67 @@
+# Glossary (paraphrased)
+
+- **Abstraction:** redefining and combining entities, attributes or relationships into generic terms (Employee → Party + Role). It buys flexibility at the cost of communication, enforceable rules and simplicity.
+- **Action rule:** an instruction triggered by attribute values ("10% off over five products"). Enforced outside the model.
+- **Actor (UML):** a direct external user of a system: a person, device or system.
+- **Aggregate / summarization (meter):** stored above the lowest level of business detail. *The book's glossary also uses "aggregate" for a table resolving a one-to-one; the chapter meaning is used here.*
+- **Alternate key (AK):** a candidate key not chosen as primary. It becomes a unique index.
+- **Associative entity:** resolves a many-to-many relationship. It inherits both keys and may have its own attributes.
+- **Atomic meter:** the lowest level of detail, typically transactions.
+- **Attribute:** a property whose values identify, describe or measure instances of an entity.
+- **Axis technique:** a dimensional CDM with the measured process in the centre and dimensions as axes, notched with their levels.
+- **Bridge table:** resolves a many-to-many between a meter and a dimension, often weighted.
+- **Candidate key:** unique, mandatory, non-volatile and minimal attribute(s).
+- **Cardinality:** the zero, one or many symbols on each end of a relationship.
+- **Class word:** the last term of an attribute name (Amount, Code, Date, Name, Indicator, Text). It implies the domain.
+- **Concept:** a term that's basic (used constantly) and critical (the business depends on it) for the audience.
+- **Conceptual data model (CDM):** a one-page view of key concepts and their rules (relational) or measures and navigation (dimensional) for a scope and audience.
+- **Conformed dimension:** a dimension shared across marts (or drawn from a common superset), enabling drill-across.
+- **Cumulative (accumulating) meter:** measures how long a process takes from start to finish.
+- **Data rule:** a structural (cardinality) or referential-integrity rule, captured on the model.
+- **Data model / data modeling:** a precise symbolic description of an information landscape, and the question-asking process that produces it.
+- **Degenerate dimension:** a dimension with a single attribute (e.g. order number) stored in the meter.
+- **Denormalization:** deliberately reintroducing redundancy on the physical model, by rolldown or rollup.
+- **Derived attribute:** calculated from others. Removed from a normalized logical model.
+- **Dimension:** a subject that adds meaning to measures (filter, sort, sum).
+- **Domain:** the set of allowed values: format, list or range.
+- **Dummy data:** fake values used to get round a rule (ZZ country, 99 phone). It erodes precision.
+- **Entity / instance:** a noun concept worth capturing (who, what, when, where, why, how), and one occurrence of it.
+- **Factless fact:** a meter without measures. It counts relationships between dimensions.
+- **Family Tree:** a spreadsheet of source, definition and history for each concept or attribute, from source to target.
+- **Foreign key (FK):** the parent's key copied into the child, used for navigation.
+- **Forward / reverse engineering:** model → database / database → model.
+- **Grain:** the lowest level of detail in a meter.
+- **Grain matrix:** measures (columns) × levels (rows), marked with the business questions that need each combination.
+- **Hierarchy:** each member has at most one parent at the level above.
+- **In-The-Know template:** a list of people and documents per term, with role and contact.
+- **Independent (strong, kernel) / dependent (weak) entity:** identified on its own / needs another entity's key.
+- **Inversion entry (IE) / secondary key:** a non-unique index on frequently searched attributes.
+- **Junk dimension:** combinations of small flags and codes.
+- **Logical data model (LDM):** the detailed, technology-independent business solution.
+- **Measure:** a numeric attribute in a meter that answers business questions.
+- **Metadata:** text, voice or image describing what an audience needs to see or experience. Six types: business, storage, process, display, project, program.
+- **Meter:** a bucket of related measures for one business process (a fact table, physically).
+- **Multi-valued dimension:** several values per meter row (e.g. diagnoses), handled with a weighted bridge.
+- **Natural (business) key:** how the business identifies an instance.
+- **Network:** a many-to-many (recursive) structure. Members can have several parents.
+- **Normalization:** organizing attributes so each is single-valued (1NF) and a fact about the whole key (2NF) and nothing but the key (3NF). Higher forms: BCNF, 4NF, 5NF.
+- **Ontology:** a taxonomy with relationships between terms.
+- **Partitioning:** splitting a table vertically (columns) or horizontally (rows).
+- **Physical data model (PDM):** the LDM compromised for a specific technology.
+- **Primary key (PK):** the chosen candidate key.
+- **Ragged dimension:** a hierarchy with missing levels, giving variable depth.
+- **Recursive relationship:** between instances of the same entity. One-to-many gives a hierarchy; many-to-many gives a network.
+- **Relational vs dimensional:** business rules vs navigation for analysis.
+- **Rolldown / rollup:** fold parent into child / child into repeated columns of the parent. For subtypes: copy the supertype into the subtypes / collapse the subtypes into the supertype with a type code. **Identity:** keep supertype and subtypes, joined one-to-one.
+- **Scope / abstraction / time / function:** the four "camera settings" of a model.
+- **Shrunken (book's usage):** large text at the meter's grain, split off for efficiency.
+- **Slowly changing dimension (SCD):** 0 original or fixed, 1 overwrite, 2 full history with rows, 3 limited history with columns, 6 a hybrid.
+- **Snapshot meter (book's usage):** timestamps of the steps in an instance's life cycle.
+- **Snowflake:** the higher hierarchy levels on a dimensional LDM; physically, a design that keeps each level as its own table.
+- **Star schema:** a physical dimensional design with each dimension flattened into one table around a fact table.
+- **Subtyping:** a supertype holding the common properties of subtypes. *Exclusive* (X in the symbol) or *inclusive* (overlapping).
+- **Surrogate key:** a meaningless, system-generated key. Pair it with the natural key as an AK.
+- **Taxonomy:** a tree of categorized terms, used to classify text. It's to text what a data model is to structured data.
+- **Unstructured / semi-structured data:** text and objects with no repeating pattern / data whose structure must be read from the content.
+- **View:** a stored query acting as a virtual table.
+- **Wayfinding:** the book's metaphor. A model is a map that simplifies a complex landscape.
