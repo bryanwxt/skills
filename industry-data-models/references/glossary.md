@@ -1,0 +1,69 @@
+# Glossary
+
+Each entry is a term followed by its meaning in these models, with the chapter in brackets: 1 = conventions, 2 = manufacturing, 3 = telecom, 4 = health care, 5 = insurance, 6 = financial services, 7 = professional services, 8 = travel, 9 = e-commerce.
+
+- **Accommodation class** (8): the service class of a space: first, business, coach, standard room, suite.
+- **Accommodation map** (8): physical capacity per class for a vehicle or hotel. Sellable quantity may exceed it (overbooking).
+- **Accommodation spot** (8): a specific seat number or room number.
+- **Account** (6): the record of activity for using a financial product. It's distinct from the product (how it works) and the agreement (what was promised).
+- **Account product** (6): links an account to the product(s) behind it, over time.
+- **Account transaction task** (6): an automated post, authorize or pre-determined (scheduled) transaction, with a time frequency.
+- **Actuarial analysis** (5): part of a risk analysis. It weighs analysis parameters to produce scores and to set rates or factors.
+- **Adjudication rule** (5): an eligibility, audit or pricing rule applied in claim settlement, with factors.
+- **Agreement asset usage** (6): an asset used in an agreement as collateral and/or as the item purchased.
+- **Analysis outcome** (6): a dated score per parameter for a party target (behaviour score), an account target (account score) or a market segment.
+- **Applicability (required / standard / optional / selectable)**: how a feature or coverage relates to a product. Respectively: it must be included; it's the default; the customer may add it; or the customer must choose among a set.
+- **Automated agent** (9): a party subtype for servers, spiders and bots.
+- **Billing agent** (3): a party that bills customers for another carrier's services.
+- **Capability type** (3): a function linked to network assembly types, circuit types and products.
+- **Circuit** (3): the logical, functional capability (a communications path) implemented on network assemblies via circuit presence.
+- **Claim** (4, 5): a request for payment under one insurance policy. It's structured like an invoice and settled through adjudication.
+- **Claim service code** (4): a supertype over CPT, HCPCS and revenue codes. It keeps the model neutral to code-set changes.
+- **Claim settlement amount** (4, 5): deductible, usual and customary, disallowed, or payment amount, with an explanation-of-benefit type.
+- **Communication identifier** (3): the carrier's inventory of numbers. It isn't a contact mechanism.
+- **Consumer** (9): a party that may or did buy. A supertype of visitor, subscriber, customer and prospect.
+- **Coupon** (8): a ticket segment for one reservation item or leg, with its own price components.
+- **Coverage availability** (5): product × coverage type × coverage level, with an applicability type.
+- **Coverage level** (5): an amount, range, deductible, copay or coinsurance setting for a coverage type.
+- **Deployment** (2, 3): an installed instance of a product at a facility for a customer. Delivery for services that are used over time.
+- **Deployment usage** (2, 3): activity, volume or time-period usage (call detail in telecom). It's billed via deployment usage billing.
+- **Engagement** (7): the professional-services "order". Items are placements, custom items or product order items.
+- **Engagement rate** (7): billing rate and cost per rate type and unit of measure, over time.
+- **Engineering change** (2): request, notice and release are statuses of one change. Its impact goes to specifications or BOM lines.
+- **Episode** (4): an illness or injury, possibly from an incident, treated across visits.
+- **Experience-based vs community-based rating** (5): individual case-by-case rating vs rate tables for broad pools.
+- **Financial product rule** (6): a constraint from a regulation requirement or an agreement term, applied to a product, category, feature or setting.
+- **Functional setting** (6): a parameter controlling how a feature or product operates (e.g. a fee per ATM use, compounding frequency).
+- **Health care delivery** (4): an examination, procedure, drug or supply administration, or DME delivery within a visit.
+- **Incident** (4, 5): an event causing (potential) loss or need for care. Incidents affect risk even without a claim.
+- **Insured asset** (5): the thing a policy item covers (vehicle, building, valuables, person).
+- **Inventory item configuration** (2): as-built (manufacturing) or as-maintained (service) composition of physical items, over time.
+- **Marketing package** (2, 7): a product association that bundles products or services.
+- **Network assembly** (3): a configured group of network components, nested, with configuration settings.
+- **Part** (2): the type of physical item made or used (finished good, subassembly, raw material). It's distinct from the product (the marketing offering).
+- **Part BOM** (2): a recursive part composition, engineering or manufacturing view. Key = two part IDs + seq ID.
+- **Party / party role / party relationship** (1): a person, organization (or automated agent); the roles it plays; the relationships between roles.
+- **Party need** (6, 9): an identified interest by need type, product or category, discovered by communication or web activity.
+- **Payor** (4, 5): whoever actually pays a claim (insurer, self-insured employer, TPA).
+- **Plan** (6): a financial course of action meeting prioritized objectives and needs, with plan products and roles.
+- **Premium schedule** (5): due dates, insured periods and amounts per policy. It breaks down into policy item premiums, which are billed via policy item premium billing.
+- **Product delivery skill requirement** (7): the skills needed to deliver a service product.
+- **Professional** (7): a person able to deliver professional services, as employee or contractor.
+- **Requirement** (7): a client or internal need. It's a resource requirement (placement), project requirement (deliverables) or product requirement. It's recursive.
+- **Reservation** (8): the travel "order". Items are for scheduled transportation, hotel or car offerings, with reserved travellers.
+- **Scheduled transportation** (8): a dated run of a transportation offering using a specific vehicle.
+- **Scheduled transportation offering** (8): what's sellable on a scheduled transportation per accommodation class.
+- **Server hit** (9): one request in a web log (IP, authuser, time, request, status, bytes, referrer, user agent, cookie).
+- **Service entry** (7): a time entry, expense entry, materials usage or deliverable turnover, grouped on a service entry header (a generalized timesheet).
+- **Service order** (3): the telecom order to provision services. Items are fulfilled by deployments.
+- **Statement of work** (7): a quote subtype that confirms an already-agreed scope in writing.
+- **Subscription** (9): opted-in ongoing information (newsgroup, product info, user group), fulfilled by pieces within subscription activities.
+- **Syndicator** (6): controlling or participating lenders sharing a large financing.
+- **Ticket** (8): proof of payment grouping coupons. It can be issued without a reservation.
+- **Travel experience / event** (8): delivery for one traveller. Events are touch points (check-in, boarding, baggage, meal) with roles, statuses, the spot used, satisfaction and feedback.
+- **Travel program / rule / factor / account** (8): loyalty programs whose earning and redemption rules are data, with accounts accruing activity from experiences, sales or payments.
+- **TYPE entity** (1): holds the allowed values of a classification. The suffix distinguishes a classification from an instance.
+- **Visit** (9): a session of server hits, defined by business rules (inactivity timeout, referrer, identity by authuser > cookie > IP).
+- **Worker** (6): a supertype of employee and contractor.
+- **~ (tilde)** (1): marks a relationship whose parent key is part of the child's primary key.
+- **from date / thru date** (1): an inclusive date range.
